@@ -1,0 +1,43 @@
+#!/usr/bin/env node
+'use strict';
+
+let Logger = require('log4js').getLogger('system');
+let Http = require('http');
+
+let App = require('../zwebsite/app');
+let Config = require('../config/website');
+
+App.set('port', Config.port);
+
+let Server = Http.createServer(App);
+Server.listen(Config.port);
+Server.on('error', onError);
+Server.on('listening', onListening);
+
+function onError(error) {
+    if (error.syscall !== 'listen') {
+        throw error;
+    }
+
+    let bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
+
+    switch (error.code) {
+        case 'EACCES':
+            Logger.error(bind + ' requires elevated privileges');
+            process.exit(1);
+            break;
+        case 'EADDRINUSE':
+            Logger.error(bind + ' is already in use');
+            process.exit(1);
+            break;
+        default:
+            Logger.error('unknown error ', error);
+            throw error;
+    }
+}
+
+function onListening() {
+    let addr = Server.address();
+    let bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
+    Logger.warn('Listening on %s', bind);
+}

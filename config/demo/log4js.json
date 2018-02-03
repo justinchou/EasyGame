@@ -1,0 +1,111 @@
+{
+  "appenders": {
+    "test": {
+      "type": "stdout",
+      "layout": {
+        "type": "colored"
+      }
+    },
+    "dev": {
+      "type": "file",
+      "filename": "./logs/dev.log",
+      "layout": {
+        "type": "basic"
+      }
+    },
+    "mocha": {
+      "type": "file",
+      "filename": "./logs/mocha.log",
+      "layout": {
+        "type": "basic"
+      }
+    },
+    "system": {
+      "type": "dateFile",
+      "pattern": ".yyyy-MM-dd-hh",
+      "filename": "./logs/system.log",
+      "keepFileExt": true,
+      "layout": {
+        "type": "colored"
+      }
+    },
+    "statistics": {
+      "type": "dateFile",
+      "pattern": ".yyyy-MM-dd-hh",
+      "filename": "./logs/statistics.log",
+      "keepFileExt": true,
+      "layout": {
+        "type": "colored"
+      }
+    },
+    "api": {
+      "type": "dateFile",
+      "pattern": ".yyyy-MM-dd-hh",
+      "filename": "./logs/api.log",
+      "keepFileExt": true,
+      "layout": {
+        "type": "colored"
+      }
+    },
+    "website": {
+      "type": "dateFile",
+      "pattern": ".yyyy-MM-dd-hh",
+      "filename": "./logs/website.log",
+      "keepFileExt": true,
+      "layout": {
+        "type": "colored"
+      }
+    }
+  },
+  "//": "Level: TRACE,DEBUG,INFO,WARN,ERROR,FATAL",
+  "//": "When Online, Remove test,dev From appenders, Change level To Appropriate Value.",
+  "categories": {
+    "default": {
+      "appenders": [
+        "test",
+        "dev"
+      ],
+      "level": "DEBUG"
+    },
+    "mocha": {
+      "appenders": [
+        "test",
+        "dev",
+        "mocha"
+      ],
+      "level": "DEBUG"
+    },
+    "system": {
+      "appenders": [
+        "test",
+        "dev",
+        "system"
+      ],
+      "level": "DEBUG"
+    },
+    "statistics": {
+      "appenders": [
+        "test",
+        "dev",
+        "statistics"
+      ],
+      "level": "DEBUG"
+    },
+    "api": {
+      "appenders": [
+        "test",
+        "dev",
+        "api"
+      ],
+      "level": "DEBUG"
+    },
+    "website": {
+      "appenders": [
+        "test",
+        "dev",
+        "website"
+      ],
+      "level": "DEBUG"
+    }
+  }
+}
