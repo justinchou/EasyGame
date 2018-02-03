@@ -30,7 +30,7 @@ describe('Model', () => {
         });
 
         beforeEach(function() {
-            this.timeout(3000);
+            this.timeout(MochaConfig.timeout);
         });
 
         after(done => {
@@ -38,9 +38,10 @@ describe('Model', () => {
             done();
         });
 
-        let account = Math.floor(Math.random() * 10000000000) + 1 + "";
-        let password = "123456";
-        let newpass = "2345678";
+        let account = Math.floor(Math.random() * 10000000000) + 1 + '';
+        let password = '123456';
+        let newpass = '2345678';
+        let userid = '349573';
 
         it('Check Account #Not Exist', done => {
             AccountModel.existAccount(account, (err, exist) => {
@@ -146,5 +147,28 @@ describe('Model', () => {
             });
         });
 
+        it('Link UserId #First Time', done => {
+            AccountModel.linkUserId(account, userid, (err, info) => {
+                Should.equal(err, null);
+                Should.equal(info, true);
+                done();
+            });
+        });
+
+        it('Link UserId #Not First Time', done => {
+            AccountModel.linkUserId(account, userid, (err, info) => {
+                Should.not.equal(err, null);
+                Should.equal(info, undefined);
+                done();
+            });
+        });
+
+        it('Link UserId #Not First Time Force', done => {
+            AccountModel.linkUserId(account, userid, true, (err, info) => {
+                Should.equal(err, null);
+                Should.equal(info, true);
+                done();
+            });
+        });
     });
 });

@@ -264,5 +264,5 @@ module.exports = {
     "createAccount": createAccount,
     "accountInfo": accountInfo,
     "updatePassword": updatePassword,
-    "linkUser": linkUserId
+    "linkUserId": linkUserId
 };
