@@ -17,8 +17,8 @@ const Router = Express.Router();
 const Logger = require('log4js').getLogger('account');
 const statistics = require('log4js').getLogger('statistics');
 
-const Crypto = require('../../../zutils/Crypto');
-const WeChatAPI = require('../../../zutils/WeChatApi');
+const Crypto = require('../../../zutils/crypto');
+const WeChatAPI = require('../../../zutils/wechat');
 const HttpResponser = require('../../../zutils/HttpResponser');
 
 const ConfigAccount = require('../../../config/account');

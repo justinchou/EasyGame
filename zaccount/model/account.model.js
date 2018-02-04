@@ -11,7 +11,7 @@
 const MySQL = require("mysql");
 const Util = require("util");
 const Logger = require("log4js").getLogger("sql");
-const Crypto = require('../../zutils/Crypto');
+const Crypto = require('../../zutils/crypto');
 
 let config = require("../../config/mysql_account");
 

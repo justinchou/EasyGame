@@ -16,7 +16,7 @@ const CookieParser = require('cookie-parser');
 const BodyParser = require('body-parser');
 
 const HttpResponser = require('../zutils/HttpResponser');
-const ResMonitor = require('../zutils/ResMonitor');
+const ResMonitor = require('../zutils/monitor');
 
 const ErrorCode = require('./config/error_code');
 const MochaConfig = require('../config/mocha');

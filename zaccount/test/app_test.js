@@ -15,7 +15,7 @@ let Util = require('util');
 let QS = require('querystring');
 
 let App = require('../app');
-let Crypto = require('../../zutils/Crypto');
+let Crypto = require('../../zutils/crypto');
 
 require('log4js').configure(Path.join(__dirname, '../../config/log4js.json'));
 let Logger = require('log4js').getLogger('mocha');
