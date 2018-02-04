@@ -38,13 +38,14 @@ describe('Model', () => {
             done();
         });
 
-        let account = Math.floor(Math.random() * 10000000000) + 1 + '';
+        let type = "guest";
+        let account = type + "_" + (Math.floor(Math.random() * 10000000000) + 1);
         let password = '123456';
         let newpass = '2345678';
         let userid = '349573';
 
         it('Check Account #Not Exist', done => {
-            AccountModel.existAccount(account, (err, exist) => {
+            AccountModel.existAccount(account, type, (err, exist) => {
                 Should.equal(err, null);
                 Should.equal(exist, false);
                 done();
@@ -52,7 +53,7 @@ describe('Model', () => {
         });
 
         it('Get Account Info #Not Exist With Password', done => {
-            AccountModel.accountInfo(account, password, (err, info) => {
+            AccountModel.accountInfo(account, type, password, (err, info) => {
                 Should.not.equal(err, null);
                 Should.equal(info, undefined);
                 done();
@@ -60,7 +61,7 @@ describe('Model', () => {
         });
 
         it('Get Account Info #Not Exist Without Password', done => {
-            AccountModel.accountInfo(account, (err, info) => {
+            AccountModel.accountInfo(account, type, (err, info) => {
                 Should.not.equal(err, null);
                 Should.equal(info, undefined);
                 done();
@@ -68,7 +69,7 @@ describe('Model', () => {
         });
 
         it('Update Password #Not Exist', done => {
-            AccountModel.updatePassword(account, newpass, (err, success) => {
+            AccountModel.updatePassword(account, type, newpass, (err, success) => {
                 Should.not.equal(err, null);
                 Should.equal(success, undefined);
                 done();
@@ -76,7 +77,7 @@ describe('Model', () => {
         });
 
         it('Create Account #With Invalid Params Account', done => {
-            AccountModel.createAccount('', password, (err, success) => {
+            AccountModel.createAccount('', type, password, (err, success) => {
                 Should.not.equal(err, null);
                 Should.equal(success, undefined);
                 done();
@@ -84,7 +85,7 @@ describe('Model', () => {
         });
 
         it('Create Account #With Invalid Params Password', done => {
-            AccountModel.createAccount(account, '', (err, success) => {
+            AccountModel.createAccount(account, type, '', (err, success) => {
                 Should.not.equal(err, null);
                 Should.equal(success, undefined);
                 done();
@@ -92,7 +93,7 @@ describe('Model', () => {
         });
 
         it('Create Account #With Valid Params', done => {
-            AccountModel.createAccount(account, password, (err, success) => {
+            AccountModel.createAccount(account, type, password, (err, success) => {
                 Should.equal(err, null);
                 Should.equal(success, true);
                 done();
@@ -100,7 +101,7 @@ describe('Model', () => {
         });
 
         it('Create Account #Account Already Exist', done => {
-            AccountModel.createAccount(account, password, (err, success) => {
+            AccountModel.createAccount(account, type, password, (err, success) => {
                 Should.equal(err.code, 'ER_DUP_ENTRY');
                 Should.equal(success, undefined);
                 done();
@@ -108,7 +109,7 @@ describe('Model', () => {
         });
 
         it('Check Account #Exist', done => {
-            AccountModel.existAccount(account, (err, exist) => {
+            AccountModel.existAccount(account, type, (err, exist) => {
                 Should.equal(err, null);
                 Should.equal(exist, true);
                 done();
@@ -116,7 +117,7 @@ describe('Model', () => {
         });
 
         it('Get Account Info #Not Exist With Password Wrong', done => {
-            AccountModel.accountInfo(account, '2345678', (err, info) => {
+            AccountModel.accountInfo(account, type, '2345678', (err, info) => {
                 Should.not.equal(err, null);
                 Should.equal(info, undefined);
                 done();
@@ -124,7 +125,7 @@ describe('Model', () => {
         });
 
         it('Get Account Info #Exist With Password Right', done => {
-            AccountModel.accountInfo(account, password, (err, info) => {
+            AccountModel.accountInfo(account, type, password, (err, info) => {
                 Should.equal(err, null);
                 Should.equal(info.account, account);
                 done();
@@ -132,7 +133,7 @@ describe('Model', () => {
         });
 
         it('Get Account Info #Exist Without Password', done => {
-            AccountModel.accountInfo(account, (err, info) => {
+            AccountModel.accountInfo(account, type, (err, info) => {
                 Should.equal(err, null);
                 Should.equal(info.account, account);
                 done();
@@ -140,7 +141,7 @@ describe('Model', () => {
         });
 
         it('Update Password #Exist', done => {
-            AccountModel.updatePassword(account, newpass, (err, info) => {
+            AccountModel.updatePassword(account, type, newpass, (err, info) => {
                 Should.equal(err, null);
                 Should.equal(info, true);
                 done();
@@ -148,7 +149,7 @@ describe('Model', () => {
         });
 
         it('Link UserId #First Time', done => {
-            AccountModel.linkUserId(account, userid, (err, info) => {
+            AccountModel.linkUserId(account, type, userid, (err, info) => {
                 Should.equal(err, null);
                 Should.equal(info, true);
                 done();
@@ -156,7 +157,7 @@ describe('Model', () => {
         });
 
         it('Link UserId #Not First Time', done => {
-            AccountModel.linkUserId(account, userid, (err, info) => {
+            AccountModel.linkUserId(account, type, userid, (err, info) => {
                 Should.not.equal(err, null);
                 Should.equal(info, undefined);
                 done();
@@ -164,7 +165,7 @@ describe('Model', () => {
         });
 
         it('Link UserId #Not First Time Force', done => {
-            AccountModel.linkUserId(account, userid, true, (err, info) => {
+            AccountModel.linkUserId(account, type, userid, true, (err, info) => {
                 Should.equal(err, null);
                 Should.equal(info, true);
                 done();

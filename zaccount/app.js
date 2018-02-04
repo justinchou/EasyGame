@@ -11,7 +11,7 @@
 const Express = require('express');
 const Path = require('path');
 const Log4JS = require('log4js');
-Log4JS.configure('../config/log4js.json');
+Log4JS.configure(Path.join(__dirname, '../config/log4js.json'));
 const CookieParser = require('cookie-parser');
 const BodyParser = require('body-parser');
 
@@ -32,6 +32,16 @@ app.use(CookieParser());
 
 let lbs = require('./routes/lbs');
 app.use('/lbs', lbs);
+// 设置跨域访问 - 避免 Html5 的游戏无法访问
+app.all('*', function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    // res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
+    res.header("Access-Control-Allow-Methods", "POST,GET");
+    res.header("X-Powered-By", ' 3.2.1');
+    res.header("Content-Type", "application/json;charset=utf-8");
+    next();
+});
 let website = require('./routes/account/index');
 app.use('/', website);
 

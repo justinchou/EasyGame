@@ -95,21 +95,28 @@ function destory() {
 /**
  * Check If Account Exist
  * @param {String} account
- * @param {Function} next (ERROR, Boolean)
+ * @param {String|Function} type
+ * @param {Function=} next (ERROR, Boolean)
  */
-function existAccount(account, next) {
+function existAccount(account, type, next) {
     if (!account) {
         next(new Error('Invalid Params'));
         Logger.error('get exist account params [ %j ]', arguments);
         return;
     }
 
-    let sql = MySQL.format('SELECT * FROM `account` WHERE `account` = ?', [account]);
+    let sql;
+    if (type) {
+        sql = MySQL.format('SELECT * FROM `account` WHERE `account` = ? AND `type` = ?', [account, type]);
+    } else {
+        sql = MySQL.format('SELECT * FROM `account` WHERE `account` = ?', [account]);
+    }
+
     query(sql, (err, rows) => {
         if (err) {
-            next(err);
+            next(err, true);
         } else if (rows && rows.length > 0) {
-            next(null, true);
+            next(null, true, rows[0].userid);
         } else {
             next(null, false);
         }
@@ -119,18 +126,19 @@ function existAccount(account, next) {
 /**
  * Create Account With Password Encrypted With Md5
  * @param {String} account
- * @param {String} password
- * @param {Function} next (ERROR, Boolean)
+ * @param {String} type
+ * @param {String|Function} password
+ * @param {Function=} next (ERROR, Boolean)
  */
-function createAccount(account, password, next) {
-    if (!account || !password || typeof account !== 'string' || typeof password !== 'string') {
+function createAccount(account, type, password, next) {
+    if (!account || typeof account !== 'string') {
         next(new Error('Invalid Params'));
         Logger.error('create account params [ %j ]', arguments);
         return;
     }
 
     let pwd = Crypto.md5(password);
-    let sql = MySQL.format('INSERT INTO `account` (`account`, `password`) VALUES (?, ?)', [account, pwd]);
+    let sql = MySQL.format('INSERT INTO `account` (`account`, `type`, `password`) VALUES (?, ?, ?)', [account, type, pwd]);
     query(sql, function (err, rows) {
         if (err) {
             next(err);
@@ -151,11 +159,12 @@ function createAccount(account, password, next) {
  * accountInfo(account, password, next) : verify password
  *
  * @param {String} account
- * @param {String|Function} password
+ * @param {String} type
+ * @param {String|Function=} password
  * @param {Function=} next (ERROR, Account Object)
  */
-function accountInfo(account, password, next) {
-    if (arguments.length === 2) {
+function accountInfo(account, type, password, next) {
+    if (arguments.length === 3) {
         next = password;
         password = "";
     }
@@ -166,7 +175,13 @@ function accountInfo(account, password, next) {
         return;
     }
 
-    let sql = MySQL.format('SELECT * FROM `account` WHERE `account` = ?', [account]);
+    let sql;
+    if (type) {
+        sql = MySQL.format('SELECT * FROM `account` WHERE `account` = ? AND `type` = ?', [account, type]);
+    } else {
+        sql = MySQL.format('SELECT * FROM `account` WHERE `account` = ?', [account]);
+    }
+
     query(sql, function (err, rows, fields) {
         if (err) {
             next(err);
@@ -191,10 +206,11 @@ function accountInfo(account, password, next) {
 /**
  * Update Password
  * @param {String} account
- * @param {String} password
- * @param {Function} next (ERROR, Boolean)
+ * @param {String} type
+ * @param {String|Function} password
+ * @param {Function=} next (ERROR, Boolean)
  */
-function updatePassword(account, password, next) {
+function updatePassword(account, type, password, next) {
     if (!account || !password || typeof account !== 'string' || typeof password !== 'string') {
         next(new Error('Invalid Params'));
         Logger.error('create account params [ %j ]', arguments);
@@ -202,7 +218,12 @@ function updatePassword(account, password, next) {
     }
 
     let pwd = Crypto.md5(password);
-    let sql = MySQL.format('UPDATE `account` SET `password` = ? WHERE `account` = ?', [pwd, account]);
+    let sql;
+    if (type) {
+        sql = MySQL.format('UPDATE `account` SET `password` = ? WHERE `account` = ? AND `type` = ?', [pwd, account, type]);
+    } else {
+        sql = MySQL.format('UPDATE `account` SET `password` = ? WHERE `account` = ?', [pwd, account]);
+    }
 
     query(sql, function (err, rows) {
         if (err) {
@@ -218,28 +239,34 @@ function updatePassword(account, password, next) {
 /**
  * Link UserId Onto Account
  * @param {String} account
+ * @param {String} type
  * @param {Number} userid
  * @param {Boolean|Function} force true:当用户已绑定账号仍然强制绑定, false:仅当用户从未绑定账号时绑定
  * @param {Function=} next (ERROR, Boolean)
  */
-function linkUserId(account, userid, force, next) {
-    if (arguments.length === 3) {
+function linkUserId(account, type, userid, force, next) {
+    if (arguments.length === 4) {
         next = force;
         force = false;
     }
 
-    if (!account || !userid || typeof account !== 'string' || typeof userid !== 'string') {
+    if (!account || !userid || typeof account !== 'string' || typeof userid !== "number") {
         next(new Error('Invalid Params'));
         Logger.error('create account params [ %j ]', arguments);
         return;
     }
 
-    let sql;
-    if (force) {
-        sql = MySQL.format('UPDATE `account` SET `userid` = ? WHERE `account` = ?', [userid, account]);
-    } else {
-        sql = MySQL.format('UPDATE `account` SET `userid` = ? WHERE `account` = ? AND `userid` = ?', [userid, account, 0]);
+    let sql = 'UPDATE `account` SET `userid` = ? WHERE `account` = ?';
+    let list = [userid, account];
+    if (type) {
+        sql += ' AND `type` = ?';
+        list.push(type);
     }
+    if (!force) {
+        sql += ' AND `userid` = ?';
+        list.push(0);
+    }
+    sql = MySQL.format(sql, list);
 
     query(sql, function (err, rows) {
         if (err) {
