@@ -17,16 +17,16 @@ const Router = Express.Router();
 const LogStat = require('log4js').getLogger('statistics');
 const Logger = require('log4js').getLogger('account');
 
-const Crypto = require('../../../zutils/utils/crypto');
-const WeChatAPI = require('../../../zutils/utils/wechat');
-const HttpResponser = require('../../../zutils/classes/HttpResponser');
+const Crypto = require('../../zutils/utils/crypto');
+const WeChatAPI = require('../../zutils/utils/wechat');
+const HttpResponser = require('../../zutils/classes/HttpResponser');
 
-const ConfigAccount = require('../../../config/account');
-const ConfigHall = require('../../../config/hall');
-const ErrorCode = require('../../config/error_code');
+const ConfigAccount = require('../../config/account');
+const ConfigHall = require('../../config/hall');
+const ErrorCode = require('../config/error_code');
 
-let AccountModel = require('../../../zutils/model/account.model');
-let UserModel = require('../../../zutils/model/user.model');
+let AccountModel = require('../../zutils/model/account.model');
+let UserModel = require('../../zutils/model/user.model');
 
 function create_user(account, type, password, name, sex, headimgurl, next) {
     let parmas = [account, type, password, name, sex, headimgurl];
@@ -103,65 +103,6 @@ function create_user(account, type, password, name, sex, headimgurl, next) {
         }
     });
 }
-
-Router.get('/client_info', function (req, res) {
-    let client_info = {
-        version_min: ConfigAccount.version.client_min,
-        version_new: ConfigAccount.version.client_new,
-        app_web: ConfigAccount.version.client_web,
-        hall_server: ConfigHall.host + ':' + ConfigHall.port
-    };
-    res.json(new HttpResponser().fill(ErrorCode.Success, {'client_info': client_info}));
-});
-
-Router.get('/user_public_info', function (req, res) {
-    let userid = req.query.userid;
-    let checksum = req.query.checksum;
-    if (checksum !== Crypto.md5(Util.format('%s_%s', userid, ConfigAccount.keys.checksum_key))) {
-        res.json(new HttpResponser().fill(ErrorCode.APICheckSumFailed, {'message': 'check sum failed'}));
-        return;
-    }
-
-    UserModel.userPubInfo(userid, function (err, data) {
-        if (err) {
-            res.json(new HttpResponser().fill(ErrorCode.DatabaseNoRecord, {'message': 'db error or no record'}));
-            return;
-        }
-
-        let userInfo = {
-            userid: userid,
-            name: data.nickname,
-            sex: data.gender,
-            headimgurl: data.headimg || ''
-        };
-        res.json(new HttpResponser().fill(ErrorCode.Success, {userInfo: userInfo}));
-    });
-});
-
-Router.get('/user_private_info', function (req, res) {
-    let userid = req.query.userid;
-    let checksum = req.query.checksum;
-    if (checksum !== Crypto.md5(Util.format('%s_%s', userid, ConfigAccount.keys.checksum_key))) {
-        res.json(new HttpResponser().fill(ErrorCode.APICheckSumFailed, {'message': 'check sum failed'}));
-        return;
-    }
-
-    UserModel.userPriInfo(userid, function (err, data) {
-        if (err) {
-            res.json(new HttpResponser().fill(ErrorCode.DatabaseNoRecord, {'message': 'db error or no record'}));
-            return;
-        }
-
-        let userInfo = {
-            userid: userid,
-            lv: data.lv,
-            exp: data.exp,
-            coins: data.coins,
-            gems: data.gems
-        };
-        res.json(new HttpResponser().fill(ErrorCode.Success, {userInfo: userInfo}));
-    });
-});
 
 Router.get('/register', function (req, res) {
     let account = req.query.account;

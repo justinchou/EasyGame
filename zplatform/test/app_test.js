@@ -38,6 +38,8 @@ describe('App', () => {
     let email_account = '' + (Math.floor(Math.random() * 10000000) + 1) + '@lvge.tech';
     let email_userid = '';
 
+    let amount = 10;
+
     describe('#App Run 检测APP基础功能', () => {
         let app;
 
@@ -70,7 +72,7 @@ describe('App', () => {
             done();
         });
 
-        beforeEach(function() {
+        beforeEach(function () {
             this.timeout(MochaConfig.timeout);
         });
 
@@ -83,7 +85,7 @@ describe('App', () => {
         });
 
         it('获取客户端版本信息', done => {
-            let api = '/client_info';
+            let api = '/resources/client_info';
             app.get(api).expect(200).end((err, res) => {
                 if (err) {
                     Logger.error('Request API %s Failed, err: ', api, err);
@@ -104,7 +106,7 @@ describe('App', () => {
         });
 
         it('获取用户公开信息 #无checksum', done => {
-            let api = '/user_public_info?' + QS.stringify({userid: userid});
+            let api = '/resources/user_public_info?' + QS.stringify({userid: userid});
             app.get(api).expect(200).end((err, res) => {
                 if (err) {
                     Logger.error('Request API %s Failed, err: ', api, err);
@@ -119,7 +121,7 @@ describe('App', () => {
         });
 
         it('获取用户私密信息 #无checksum', done => {
-            let api = '/user_private_info?' + QS.stringify({userid: userid});
+            let api = '/resources/user_private_info?' + QS.stringify({userid: userid});
             app.get(api).expect(200).end((err, res) => {
                 if (err) {
                     Logger.error('Request API %s Failed, err: ', api, err);
@@ -134,7 +136,7 @@ describe('App', () => {
         });
 
         it('获取用户公开信息 #无对应用户', done => {
-            let api = '/user_public_info?' + QS.stringify({
+            let api = '/resources/user_public_info?' + QS.stringify({
                 userid: userid,
                 checksum: Crypto.md5(userid + '_' + AccountConfig.keys.checksum_key)
             });
@@ -152,7 +154,7 @@ describe('App', () => {
         });
 
         it('获取用户私密信息 #无对应用户', done => {
-            let api = '/user_private_info?' + QS.stringify({
+            let api = '/resources/user_private_info?' + QS.stringify({
                 userid: userid,
                 checksum: Crypto.md5(userid + '_' + AccountConfig.keys.checksum_key)
             });
@@ -169,8 +171,10 @@ describe('App', () => {
             });
         });
 
+
+
         it('注册用户 #无checksum', done => {
-            let api = '/register?' + QS.stringify({
+            let api = '/account/register?' + QS.stringify({
                 account: guest_account,
                 type: 'guest',
                 password: '',
@@ -190,7 +194,7 @@ describe('App', () => {
         });
 
         it('注册用户 #Guest', done => {
-            let api = '/register?' + QS.stringify({
+            let api = '/account/register?' + QS.stringify({
                 account: guest_account,
                 type: 'guest',
                 password: '',
@@ -215,7 +219,7 @@ describe('App', () => {
         });
 
         it('注册用户 #Email', done => {
-            let api = '/register?' + QS.stringify({
+            let api = '/account/register?' + QS.stringify({
                 account: email_account,
                 type: 'email',
                 password: password,
@@ -240,7 +244,7 @@ describe('App', () => {
         });
 
         it('获取用户公开信息 #有对应用户', done => {
-            let api = '/user_public_info?' + QS.stringify({
+            let api = '/resources/user_public_info?' + QS.stringify({
                 userid: email_userid,
                 checksum: Crypto.md5(email_userid + '_' + AccountConfig.keys.checksum_key)
             });
@@ -262,7 +266,7 @@ describe('App', () => {
         });
 
         it('获取用户私密信息 #有对应用户', done => {
-            let api = '/user_private_info?' + QS.stringify({
+            let api = '/resources/user_private_info?' + QS.stringify({
                 userid: guest_userid,
                 checksum: Crypto.md5(guest_userid + '_' + AccountConfig.keys.checksum_key)
             });
@@ -284,8 +288,10 @@ describe('App', () => {
             });
         });
 
+
+
         it('授权Guest用户', done => {
-            let api = '/guest_auth?' + QS.stringify({
+            let api = '/account/guest_auth?' + QS.stringify({
                 account: guest_account
             });
             app.get(api).expect(200).end((err, res) => {
@@ -307,7 +313,7 @@ describe('App', () => {
         });
 
         it('授权Email用户', done => {
-            let api = '/email_auth?' + QS.stringify({
+            let api = '/account/email_auth?' + QS.stringify({
                 account: email_account,
                 password: password
             });
@@ -330,7 +336,7 @@ describe('App', () => {
         });
 
         it('授权WeChat用户', done => {
-            let api = '/wechat_auth?' + QS.stringify({
+            let api = '/account/wechat_auth?' + QS.stringify({
                 code: "123456",
                 os: "IOS"
             });
@@ -351,6 +357,313 @@ describe('App', () => {
                 done();
             });
         });
+
+
+
+        it('增加用户的资源 #Coins', done => {
+            let api = '/resources/add_user_res';
+            let type = 'coins';
+            app.post(api).send({
+                userid: email_userid,
+                type: type,
+                amount: amount,
+                checksum: Crypto.md5(Util.format('%s_%s_%s_%s', email_userid, type, amount, AccountConfig.keys.checksum_key))
+            }).expect(200).end((err, res) => {
+                if (err) {
+                    Logger.error('Request API %s Failed, err: ', api, err);
+                }
+                Should.equal(err, null);
+                Should.equal(res.body.code, ErrorCode.Success);
+
+                let msg = res.body.message;
+                Should.not.equal(msg, undefined);
+                Should.equal(msg.userInfo.userid, email_userid);
+                Should.equal(msg.userInfo.lv, AccountConfig.user.lv);
+                Should.equal(msg.userInfo.exp, AccountConfig.user.exp);
+                Should.equal(msg.userInfo.coins, AccountConfig.user.coins + 10);
+                Should.equal(msg.userInfo.gems, AccountConfig.user.gems);
+
+                Should.equal(msg.addInfo.coins, amount);
+                done();
+            });
+        });
+
+        it('减少用户的资源 #Coins', done => {
+            let api = '/resources/cost_user_res';
+            let type = 'coins';
+            app.post(api).send({
+                userid: email_userid,
+                type: type,
+                amount: amount,
+                checksum: Crypto.md5(Util.format('%s_%s_%s_%s', email_userid, type, amount, AccountConfig.keys.checksum_key))
+            }).expect(200).end((err, res) => {
+                if (err) {
+                    Logger.error('Request API %s Failed, err: ', api, err);
+                }
+                Should.equal(err, null);
+                Should.equal(res.body.code, ErrorCode.Success);
+
+                let msg = res.body.message;
+                Should.not.equal(msg, undefined);
+                Should.equal(msg.userInfo.userid, email_userid);
+                Should.equal(msg.userInfo.lv, AccountConfig.user.lv);
+                Should.equal(msg.userInfo.exp, AccountConfig.user.exp);
+                Should.equal(msg.userInfo.coins, AccountConfig.user.coins);
+                Should.equal(msg.userInfo.gems, AccountConfig.user.gems);
+
+                Should.equal(msg.costInfo.coins, amount);
+                done();
+            });
+        });
+
+
+        it('增加用户的资源 #Gems', done => {
+            let api = '/resources/add_user_res';
+            let type = 'gems';
+            app.post(api).send({
+                userid: email_userid,
+                type: type,
+                amount: amount,
+                checksum: Crypto.md5(Util.format('%s_%s_%s_%s', email_userid, type, amount, AccountConfig.keys.checksum_key))
+            }).expect(200).end((err, res) => {
+                if (err) {
+                    Logger.error('Request API %s Failed, err: ', api, err);
+                }
+                Should.equal(err, null);
+                Should.equal(res.body.code, ErrorCode.Success);
+
+                let msg = res.body.message;
+                Should.not.equal(msg, undefined);
+                Should.equal(msg.userInfo.userid, email_userid);
+                Should.equal(msg.userInfo.lv, AccountConfig.user.lv);
+                Should.equal(msg.userInfo.exp, AccountConfig.user.exp);
+                Should.equal(msg.userInfo.coins, AccountConfig.user.coins);
+                Should.equal(msg.userInfo.gems, AccountConfig.user.gems + 10);
+
+                Should.equal(msg.addInfo.gems, amount);
+                done();
+            });
+        });
+
+        it('减少用户的资源 #Gems', done => {
+            let api = '/resources/cost_user_res';
+            let type = 'gems';
+            app.post(api).send({
+                userid: email_userid,
+                type: type,
+                amount: amount,
+                checksum: Crypto.md5(Util.format('%s_%s_%s_%s', email_userid, type, amount, AccountConfig.keys.checksum_key))
+            }).expect(200).end((err, res) => {
+                if (err) {
+                    Logger.error('Request API %s Failed, err: ', api, err);
+                }
+                Should.equal(err, null);
+                Should.equal(res.body.code, ErrorCode.Success);
+
+                let msg = res.body.message;
+                Should.not.equal(msg, undefined);
+                Should.equal(msg.userInfo.userid, email_userid);
+                Should.equal(msg.userInfo.lv, AccountConfig.user.lv);
+                Should.equal(msg.userInfo.exp, AccountConfig.user.exp);
+                Should.equal(msg.userInfo.coins, AccountConfig.user.coins);
+                Should.equal(msg.userInfo.gems, AccountConfig.user.gems);
+
+                Should.equal(msg.costInfo.gems, amount);
+                done();
+            });
+        });
+
+
+        it('增加用户的资源 #Lv', done => {
+            let api = '/resources/add_user_res';
+            let type = 'lv';
+            app.post(api).send({
+                userid: guest_userid,
+                type: type,
+                amount: amount,
+                checksum: Crypto.md5(Util.format('%s_%s_%s_%s', guest_userid, type, amount, AccountConfig.keys.checksum_key))
+            }).expect(200).end((err, res) => {
+                if (err) {
+                    Logger.error('Request API %s Failed, err: ', api, err);
+                }
+                Should.equal(err, null);
+                Should.equal(res.body.code, ErrorCode.Success);
+
+                let msg = res.body.message;
+                Should.not.equal(msg, undefined);
+                Should.equal(msg.userInfo.userid, guest_userid);
+                Should.equal(msg.userInfo.lv, AccountConfig.user.lv + 10);
+                Should.equal(msg.userInfo.exp, AccountConfig.user.exp);
+                Should.equal(msg.userInfo.coins, AccountConfig.user.coins);
+                Should.equal(msg.userInfo.gems, AccountConfig.user.gems);
+
+                Should.equal(msg.addInfo.lv, amount);
+                done();
+            });
+        });
+
+        it('增加用户的资源 #Exp', done => {
+            let api = '/resources/add_user_res';
+            let type = 'exp';
+            app.post(api).send({
+                userid: guest_userid,
+                type: type,
+                amount: amount,
+                checksum: Crypto.md5(Util.format('%s_%s_%s_%s', guest_userid, type, amount, AccountConfig.keys.checksum_key))
+            }).expect(200).end((err, res) => {
+                if (err) {
+                    Logger.error('Request API %s Failed, err: ', api, err);
+                }
+                Should.equal(err, null);
+                Should.equal(res.body.code, ErrorCode.Success);
+
+                let msg = res.body.message;
+                Should.not.equal(msg, undefined);
+                Should.equal(msg.userInfo.userid, guest_userid);
+                Should.equal(msg.userInfo.lv, AccountConfig.user.lv + 10);
+                Should.equal(msg.userInfo.exp, AccountConfig.user.exp + 10);
+                Should.equal(msg.userInfo.coins, AccountConfig.user.coins);
+                Should.equal(msg.userInfo.gems, AccountConfig.user.gems);
+
+                Should.equal(msg.addInfo.exp, amount);
+                done();
+            });
+        });
+
+
+        it('增加用户的资源 #错误的checksum', done => {
+            let api = '/resources/add_user_res';
+            let type = 'exp';
+            app.post(api).send({
+                userid: email_userid,
+                type: type,
+                amount: amount,
+                checksum: Crypto.md5(Util.format('%s_%s_%s_%s123', email_userid, type, amount, AccountConfig.keys.checksum_key))
+            }).expect(200).end((err, res) => {
+                if (err) {
+                    Logger.error('Request API %s Failed, err: ', api, err);
+                }
+                Should.equal(err, null);
+                Should.equal(res.body.code, ErrorCode.APICheckSumFailed);
+
+                let msg = res.body.message;
+                Should.not.equal(msg, undefined);
+                Should.not.equal(msg.message, undefined);
+                done();
+            });
+        });
+
+        it('减少用户的资源 #错误的checksum', done => {
+            let api = '/resources/cost_user_res';
+            let type = 'exp';
+            app.post(api).send({
+                userid: email_userid,
+                type: type,
+                amount: amount,
+                checksum: Crypto.md5(Util.format('%s_%s_%s_%s123', email_userid, type, amount, AccountConfig.keys.checksum_key))
+            }).expect(200).end((err, res) => {
+                if (err) {
+                    Logger.error('Request API %s Failed, err: ', api, err);
+                }
+                Should.equal(err, null);
+                Should.equal(res.body.code, ErrorCode.APICheckSumFailed);
+
+                let msg = res.body.message;
+                Should.not.equal(msg, undefined);
+                Should.not.equal(msg.message, undefined);
+                done();
+            });
+        });
+
+        it('增加用户的资源 #其他非支持类型', done => {
+            let api = '/resources/add_user_res';
+            let type = 'lalala';
+            app.post(api).send({
+                userid: guest_userid,
+                type: type,
+                amount: amount,
+                checksum: Crypto.md5(Util.format('%s_%s_%s_%s', guest_userid, type, amount, AccountConfig.keys.checksum_key))
+            }).expect(200).end((err, res) => {
+                if (err) {
+                    Logger.error('Request API %s Failed, err: ', api, err);
+                }
+                Should.equal(err, null);
+                Should.equal(res.body.code, ErrorCode.InvalidParams);
+
+                let msg = res.body.message;
+                Should.not.equal(msg, undefined);
+                Should.not.equal(msg.message, undefined);
+                done();
+            });
+        });
+
+        it('减少用户的资源 #其他非支持类型', done => {
+            let api = '/resources/cost_user_res';
+            let type = 'lv';
+            app.post(api).send({
+                userid: guest_userid,
+                type: type,
+                amount: amount,
+                checksum: Crypto.md5(Util.format('%s_%s_%s_%s', guest_userid, type, amount, AccountConfig.keys.checksum_key))
+            }).expect(200).end((err, res) => {
+                if (err) {
+                    Logger.error('Request API %s Failed, err: ', api, err);
+                }
+                Should.equal(err, null);
+                Should.equal(res.body.code, ErrorCode.InvalidParams);
+
+                let msg = res.body.message;
+                Should.not.equal(msg, undefined);
+                Should.not.equal(msg.message, undefined);
+                done();
+            });
+        });
+
+        it('增加用户的资源 #增加资源数为负数', done => {
+            let api = '/resources/add_user_res';
+            let type = 'lalala';
+            app.post(api).send({
+                userid: guest_userid,
+                type: type,
+                amount: -amount,
+                checksum: Crypto.md5(Util.format('%s_%s_%s_%s', guest_userid, type, -amount, AccountConfig.keys.checksum_key))
+            }).expect(200).end((err, res) => {
+                if (err) {
+                    Logger.error('Request API %s Failed, err: ', api, err);
+                }
+                Should.equal(err, null);
+                Should.equal(res.body.code, ErrorCode.InvalidParams);
+
+                let msg = res.body.message;
+                Should.not.equal(msg, undefined);
+                Should.not.equal(msg.message, undefined);
+                done();
+            });
+        });
+
+        it('减少用户的资源 #减少资源数为负数', done => {
+            let api = '/resources/cost_user_res';
+            let type = 'gems';
+            app.post(api).send({
+                userid: guest_userid,
+                type: type,
+                amount: -amount,
+                checksum: Crypto.md5(Util.format('%s_%s_%s_%s', guest_userid, type, -amount, AccountConfig.keys.checksum_key))
+            }).expect(200).end((err, res) => {
+                if (err) {
+                    Logger.error('Request API %s Failed, err: ', api, err);
+                }
+                Should.equal(err, null);
+                Should.equal(res.body.code, ErrorCode.InvalidParams);
+
+                let msg = res.body.message;
+                Should.not.equal(msg, undefined);
+                Should.not.equal(msg.message, undefined);
+                done();
+            });
+        });
+
+
 
     });
 });

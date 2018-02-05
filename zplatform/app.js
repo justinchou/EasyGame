@@ -41,10 +41,13 @@ app.all('*', function (req, res, next) {
     res.header("Access-Control-Allow-Methods", "POST,GET");
     res.header("X-Powered-By", ' 3.2.1');
     res.header("Content-Type", "application/json;charset=utf-8");
+    Logger.debug('Recv %s %s [ %j ] [ %j ]', req.method, req.url, req.query, req.body);
     next();
 });
-let website = require('./routes/account/index');
-app.use('/', website);
+let account = require('./routes/account');
+app.use('/account', account);
+let resources = require('./routes/resources');
+app.use('/resources', resources);
 
 
 app.use(function (req, res, next) {
