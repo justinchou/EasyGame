@@ -15,10 +15,11 @@ let Util = require('util');
 let QS = require('querystring');
 
 let App = require('../app');
-let Crypto = require('../../zutils/crypto');
+let Crypto = require('../../zutils/utils/crypto');
 
 require('log4js').configure(Path.join(__dirname, '../../config/log4js.json'));
 let Logger = require('log4js').getLogger('mocha');
+
 let AccountConfig = require('../../config/account');
 let MochaConfig = require('../../config/mocha');
 let ErrorCode = require('../config/error_code');
@@ -74,8 +75,8 @@ describe('App', () => {
         });
 
         after(done => {
-            let AccountModel = require('../model/account.model');
-            let UserModel = require('../model/user.model');
+            let AccountModel = require('../../zutils/model/account.model');
+            let UserModel = require('../../zutils/model/user.model');
             AccountModel.destory();
             UserModel.destory();
             done();

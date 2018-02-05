@@ -11,7 +11,7 @@
 const MySQL = require("mysql");
 const Util = require("util");
 const Logger = require("log4js").getLogger("sql");
-const Crypto = require('../../zutils/crypto');
+const Crypto = require('../utils/crypto');
 
 let config = require("../../config/mysql_account");
 
@@ -250,7 +250,7 @@ function linkUserId(account, type, userid, force, next) {
         force = false;
     }
 
-    if (!account || !userid || typeof account !== 'string' || typeof userid !== "number") {
+    if (!account || !userid || typeof account !== 'string' || ["number","string"].indexOf(typeof userid) === -1) {
         next(new Error('Invalid Params'));
         Logger.error('create account params [ %j ]', arguments);
         return;

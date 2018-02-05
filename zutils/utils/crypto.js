@@ -12,7 +12,7 @@
 'use strict';
 
 //导入模块
-const Crypto = require('zutils/crypto');
+const Crypto = require('crypto');
 
 /**
  * aes192加密模块

@@ -11,17 +11,18 @@
 const Express = require('express');
 const Path = require('path');
 const Log4JS = require('log4js');
-Log4JS.configure('../config/log4js.json');
+Log4JS.configure(Path.join(__dirname, '../config/log4js.json'));
 const CookieParser = require('cookie-parser');
 const BodyParser = require('body-parser');
 
-const HttpResponser = require('../zutils/HttpResponser');
-const ResMonitor = require('../zutils/monitor');
+const HttpResponser = require('../zutils/classes/HttpResponser');
+const ResMonitor = require('../zutils/utils/monitor');
 
 const ErrorCode = require('./config/error_code');
 const MochaConfig = require('../config/mocha');
+
 const LogStat = require('log4js').getLogger('statistics');
-const LogSys = require('log4js').getLogger('system');
+const Logger = require('log4js').getLogger('website');
 
 let app = new Express();
 
@@ -59,18 +60,18 @@ if (!MochaConfig.debug) {
     }, 5 * 60 * 1e3);
 
     process.on('unhandledRejection', function (err) {
-        LogSys.error('Unhandled Rejection:');
-        LogSys.error(err);
-        LogSys.error(err.stack);
+        Logger.error('Unhandled Rejection:');
+        Logger.error(err);
+        Logger.error(err.stack);
     });
     process.on('uncaughtException', function (err) {
-        LogSys.error('Unhandled Exception:');
-        LogSys.error(err);
-        LogSys.error(err.stack);
+        Logger.error('Unhandled Exception:');
+        Logger.error(err);
+        Logger.error(err.stack);
     });
     process.on('SIGINT', function (err) {
-        LogSys.info("you pressed ctrl and c to exit process");
-        LogSys.warn(err);
+        Logger.info("you pressed ctrl and c to exit process");
+        Logger.warn(err);
         process.exit(0);
     });
 }

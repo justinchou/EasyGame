@@ -11,13 +11,13 @@
 const Express = require('express');
 const Router = Express.Router();
 
-const HttpResponser = require('../../zutils/HttpResponser');
+const HttpResponser = require('../../zutils/classes/HttpResponser');
 
 let ErrorCode = require('../config/error_code');
 
 // lbs means load balance service, provide for lbs live check
 Router.all('/', function (req, res, next) {
-    res.json(new HttpResponser().fill(ErrorCode.Success, "Success"));
+    res.json(new HttpResponser().fill(ErrorCode.Success, {"message": "success"}));
 });
 
 module.exports = Router;

@@ -14,19 +14,19 @@ const Async = require('async');
 const Express = require('express');
 const Router = Express.Router();
 
+const LogStat = require('log4js').getLogger('statistics');
 const Logger = require('log4js').getLogger('account');
-const statistics = require('log4js').getLogger('statistics');
 
-const Crypto = require('../../../zutils/crypto');
-const WeChatAPI = require('../../../zutils/wechat');
-const HttpResponser = require('../../../zutils/HttpResponser');
+const Crypto = require('../../../zutils/utils/crypto');
+const WeChatAPI = require('../../../zutils/utils/wechat');
+const HttpResponser = require('../../../zutils/classes/HttpResponser');
 
 const ConfigAccount = require('../../../config/account');
 const ConfigHall = require('../../../config/hall');
 const ErrorCode = require('../../config/error_code');
 
-let AccountModel = require('../../model/account.model');
-let UserModel = require('../../model/user.model');
+let AccountModel = require('../../../zutils/model/account.model');
+let UserModel = require('../../../zutils/model/user.model');
 
 function create_user(account, type, password, name, sex, headimgurl, next) {
     let parmas = [account, type, password, name, sex, headimgurl];
@@ -64,7 +64,7 @@ function create_user(account, type, password, name, sex, headimgurl, next) {
                         }
 
                         next(null, retid);
-                        statistics.info('Create Account And User: Account [ %s ] Name [ %s ] Sex [ %s ] Img [ %s ]', account, name, sex, headimgurl);
+                        LogStat.info('Create Account And User: Account [ %s ] Name [ %s ] Sex [ %s ] Img [ %s ]', account, name, sex, headimgurl);
                     });
                 });
             });
@@ -85,7 +85,7 @@ function create_user(account, type, password, name, sex, headimgurl, next) {
                     }
 
                     next(null, retid);
-                    statistics.info('Create User, Account Exist: Account [ %s ] Name [ %s ] Sex [ %s ] Img [ %s ]', account, name, sex, headimgurl);
+                    LogStat.info('Create User, Account Exist: Account [ %s ] Name [ %s ] Sex [ %s ] Img [ %s ]', account, name, sex, headimgurl);
                 });
             });
         } else {
@@ -98,7 +98,7 @@ function create_user(account, type, password, name, sex, headimgurl, next) {
                 }
 
                 next(null, retid);
-                statistics.info('Update User, Account And User Both Exist: Account [ %s ] Name [ %s ] Sex [ %s ] Img [ %s ]', account, name, sex, headimgurl);
+                LogStat.info('Update User, Account And User Both Exist: Account [ %s ] Name [ %s ] Sex [ %s ] Img [ %s ]', account, name, sex, headimgurl);
             });
         }
     });
@@ -212,7 +212,7 @@ Router.get('/guest_auth', function (req, res) {
 
         res.json(new HttpResponser().fill(ErrorCode.Success, {auth: auth}));
 
-        statistics.info('Login Guest [ %j ] [ %j ]', req.query, auth);
+        LogStat.info('Login Guest [ %j ] [ %j ]', req.query, auth);
     });
 });
 
@@ -244,7 +244,7 @@ Router.get('/email_auth', function (req, res) {
 
         res.json(new HttpResponser().fill(ErrorCode.Success, {auth: auth}));
 
-        statistics.info('Login Email [ %j ] [ %j ]', req.query, auth);
+        LogStat.info('Login Email [ %j ] [ %j ]', req.query, auth);
     });
 });
 
@@ -267,12 +267,24 @@ Router.get('/wechat_auth', function (req, res) {
             return;
         }
 
+        if (data.errcode) {
+            res.json(new HttpResponser().fill(ErrorCode.WeChatAPIError, {"message": data.errmsg}));
+            Logger.error('Load Wechat AccessToken Failed: params [ %j ] err ', req.query, data.errmsg);
+            return;
+        }
+
         let access_token = data.access_token;
         let openid = data.openid;
         WeChatAPI.get_state_info(access_token, openid, function (err, data) {
             if (err) {
                 res.json(new HttpResponser().fill(ErrorCode.WeChatAPIError, {"message": "load wechat state_info failed"}));
                 Logger.error('Load Wechat StateInfo Failed: params [ %j ] err ', req.query, err);
+                return;
+            }
+
+            if (data.errcode) {
+                res.json(new HttpResponser().fill(ErrorCode.WeChatAPIError, {"message": data.errmsg}));
+                Logger.error('Load Wechat StateInfo Failed: params [ %j ] err ', req.query, data.errmsg);
                 return;
             }
 
@@ -297,7 +309,7 @@ Router.get('/wechat_auth', function (req, res) {
 
                 res.json(new HttpResponser().fill(ErrorCode.Success, {auth: auth}));
 
-                statistics.info('Login Wechat [ %j ] [ %j ]', req.query, auth);
+                LogStat.info('Login Wechat [ %j ] [ %j ]', req.query, auth);
             });
 
         });

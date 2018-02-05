@@ -9,7 +9,7 @@
 'use strict';
 
 // const Util = require('util');
-const Logger = require('log4js').getLogger('system');
+const Logger = require('log4js').getLogger('utils');
 
 function HttpResponser() {
     this.code = 0;

@@ -84,13 +84,13 @@ describe('Model', () => {
             });
         });
 
-        it('Create Account #With Invalid Params Password', done => {
-            AccountModel.createAccount(account, type, '', (err, success) => {
-                Should.not.equal(err, null);
-                Should.equal(success, undefined);
-                done();
-            });
-        });
+        // it('Create Account #With Invalid Params Password', done => {
+        //     AccountModel.createAccount(account, type, '', (err, success) => {
+        //         Should.not.equal(err, null);
+        //         Should.equal(success, undefined);
+        //         done();
+        //     });
+        // });
 
         it('Create Account #With Valid Params', done => {
             AccountModel.createAccount(account, type, password, (err, success) => {

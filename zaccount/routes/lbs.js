@@ -11,7 +11,7 @@
 const Express = require('express');
 const Router = Express.Router();
 
-const HttpResponser = require('../../zutils/HttpResponser');
+const HttpResponser = require('../../zutils/classes/HttpResponser');
 
 let ErrorCode = require('../config/error_code');
 

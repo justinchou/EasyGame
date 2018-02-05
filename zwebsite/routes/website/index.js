@@ -11,12 +11,12 @@
 let Express = require('express');
 let Router = Express.Router();
 
-const HttpResponser = require('../../../zutils/HttpResponser');
+const HttpResponser = require('../../../zutils/classes/HttpResponser');
 
 let ErrorCode = require('../../config/error_code');
 
 Router.get('/', function (req, res, next) {
-    res.json(new HttpResponser().fill(ErrorCode.Success, "Success"));
+    res.json(new HttpResponser().fill(ErrorCode.Success, {"message": "success"}));
 });
 
 module.exports = Router;

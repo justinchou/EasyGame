@@ -18,7 +18,7 @@ let AccountConfig = require('../../../config/account');
 let MochaConfig = require('../../../config/mocha');
 
 let UserModel = require('../../model/user.model');
-let Crypto = require('../../../zutils/crypto');
+let Crypto = require('../../utils/crypto');
 
 describe('Model', () => {
     describe('#Account 检测Account数据表处理函数', () => {
