@@ -21,7 +21,7 @@ let UserModel = require('../../model/user.model');
 let Crypto = require('../../utils/crypto');
 
 describe('Model', () => {
-    describe('#Account 检测Account数据表处理函数', () => {
+    describe('#UserModel 检测User数据表处理函数', () => {
 
         before(done => {
             if (MochaConfig.debug > 1) Logger.debug('Wait Database Connection For 3s');

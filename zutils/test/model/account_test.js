@@ -19,7 +19,7 @@ let MochaConfig = require('../../../config/mocha');
 let AccountModel = require('../../model/account.model');
 
 describe('Model', () => {
-    describe('#Account 检测Account数据表处理函数', () => {
+    describe('#AccountModel 检测Account数据表处理函数', () => {
 
         before(done => {
             if (MochaConfig.debug > 1) Logger.debug('Wait Database Connection For 3s');
