@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.7.19, for macos10.12 (x86_64)
 --
--- Host: 127.0.0.1    Database: platform
+-- Host: 127.0.0.1    Database: game
 -- ------------------------------------------------------
 -- Server version	5.7.19
 
@@ -16,28 +16,28 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `account`
+-- Table structure for table `user_game`
 --
 
-DROP TABLE IF EXISTS `account`;
+DROP TABLE IF EXISTS `user_game`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `account` (
-  `account` varchar(64) NOT NULL COMMENT '用户账号',
-  `type` varchar(32) NOT NULL DEFAULT '' COMMENT '账号授权来源(guest,qq,wechat,email等)',
-  `password` varchar(64) NOT NULL COMMENT '密码',
-  `userid` int(11) NOT NULL DEFAULT '0' COMMENT '绑定的用户id',
-  PRIMARY KEY (`account`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='账号表';
+CREATE TABLE `user_game` (
+  `userid` int(11) NOT NULL DEFAULT '0',
+  `gameid` int(11) NOT NULL DEFAULT '0',
+  `room_uuid` varchar(32) NOT NULL DEFAULT '',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `history` varchar(256) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户-游戏popstar关联表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `account`
+-- Dumping data for table `user_game`
 --
 
-LOCK TABLES `account` WRITE;
-/*!40000 ALTER TABLE `account` DISABLE KEYS */;
-/*!40000 ALTER TABLE `account` ENABLE KEYS */;
+LOCK TABLES `user_game` WRITE;
+/*!40000 ALTER TABLE `user_game` DISABLE KEYS */;
+/*!40000 ALTER TABLE `user_game` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -49,4 +49,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-02-05 21:08:58
+-- Dump completed on 2018-02-05 21:05:24

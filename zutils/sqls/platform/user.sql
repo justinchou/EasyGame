@@ -32,8 +32,18 @@ CREATE TABLE `user` (
   `gender` tinyint(4) DEFAULT '0' COMMENT '性别',
   `headimg` varchar(128) DEFAULT '' COMMENT '头像',
   PRIMARY KEY (`userid`)
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1 COMMENT='用户数据表(字段自行拓展)';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户数据表(字段自行拓展)';
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user`
+--
+
+LOCK TABLES `user` WRITE;
+/*!40000 ALTER TABLE `user` DISABLE KEYS */;
+/*!40000 ALTER TABLE `user` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
@@ -43,4 +53,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-02-05 20:16:27
+-- Dump completed on 2018-02-05 21:09:09
