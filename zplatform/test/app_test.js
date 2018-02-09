@@ -20,8 +20,9 @@ let Crypto = require('../../zutils/utils/crypto');
 require('log4js').configure(Path.join(__dirname, '../../config/log4js.json'));
 let Logger = require('log4js').getLogger('mocha');
 
-let AccountConfig = require('../../config/account');
-let MochaConfig = require('../../config/mocha');
+let ConfigPlatform = require('../../config/platform');
+let ConfigUtils = require('../../config/utils');
+let ConfigMocha = require('../../config/mocha');
 let ErrorCode = require('../config/error_code');
 
 describe('App', () => {
@@ -54,7 +55,7 @@ describe('App', () => {
                 if (err) {
                     Logger.error('Request API %s Failed, err: ', api, err);
                 }
-                if (MochaConfig.debug > 1) {
+                if (ConfigMocha.debug > 1) {
                     Logger.info('%s: res.text [ %s ], res.body [ %j ]', api, res.text, res.body);
                     Logger.info('%s: res.header [ %j ], res.headers [ %j ]', api, res.header, res.headers);
                     Logger.info('%s: res.status [ %s ], res.statusCode [ %s ]', api, res.status, res.statusCode);
@@ -73,7 +74,7 @@ describe('App', () => {
         });
 
         beforeEach(function () {
-            this.timeout(MochaConfig.timeout);
+            this.timeout(ConfigMocha.timeout);
         });
 
         after(done => {
@@ -97,9 +98,9 @@ describe('App', () => {
                 let msg = res.body.message;
                 Should.not.equal(msg, undefined);
                 Should.not.equal(msg.client_info, undefined);
-                Should.equal(msg.client_info.version_min, AccountConfig.version.client_min);
-                Should.equal(msg.client_info.version_new, AccountConfig.version.client_new);
-                Should.equal(msg.client_info.app_web, AccountConfig.version.client_web);
+                Should.equal(msg.client_info.version_min, ConfigUtils.version.client_min);
+                Should.equal(msg.client_info.version_new, ConfigUtils.version.client_new);
+                Should.equal(msg.client_info.app_web, ConfigUtils.version.client_web);
                 Should.exist(msg.client_info.hall_server);
                 done();
             });
@@ -138,7 +139,7 @@ describe('App', () => {
         it('获取用户公开信息 #无对应用户', done => {
             let api = '/resources/user_public_info?' + QS.stringify({
                 userid: userid,
-                checksum: Crypto.md5(userid + '_' + AccountConfig.keys.checksum_key)
+                checksum: Crypto.md5(userid + '_' + ConfigUtils.keys.checksum_key)
             });
             app.get(api).expect(200).end((err, res) => {
                 if (err) {
@@ -156,7 +157,7 @@ describe('App', () => {
         it('获取用户私密信息 #无对应用户', done => {
             let api = '/resources/user_private_info?' + QS.stringify({
                 userid: userid,
-                checksum: Crypto.md5(userid + '_' + AccountConfig.keys.checksum_key)
+                checksum: Crypto.md5(userid + '_' + ConfigUtils.keys.checksum_key)
             });
             app.get(api).expect(200).end((err, res) => {
                 if (err) {
@@ -201,7 +202,7 @@ describe('App', () => {
                 name: nickname,
                 sex: gender,
                 headimgurl: headimg,
-                checksum: Crypto.md5(Util.format('%s_%s_%s_%s', guest_account, 'guest', '', AccountConfig.keys.checksum_key))
+                checksum: Crypto.md5(Util.format('%s_%s_%s_%s', guest_account, 'guest', '', ConfigUtils.keys.checksum_key))
             });
             app.get(api).expect(200).end((err, res) => {
                 if (err) {
@@ -226,7 +227,7 @@ describe('App', () => {
                 name: nickname,
                 sex: gender,
                 headimgurl: headimg,
-                checksum: Crypto.md5(Util.format('%s_%s_%s_%s', email_account, 'email', password, AccountConfig.keys.checksum_key))
+                checksum: Crypto.md5(Util.format('%s_%s_%s_%s', email_account, 'email', password, ConfigUtils.keys.checksum_key))
             });
             app.get(api).expect(200).end((err, res) => {
                 if (err) {
@@ -246,7 +247,7 @@ describe('App', () => {
         it('获取用户公开信息 #有对应用户', done => {
             let api = '/resources/user_public_info?' + QS.stringify({
                 userid: email_userid,
-                checksum: Crypto.md5(email_userid + '_' + AccountConfig.keys.checksum_key)
+                checksum: Crypto.md5(email_userid + '_' + ConfigUtils.keys.checksum_key)
             });
             app.get(api).expect(200).end((err, res) => {
                 if (err) {
@@ -268,7 +269,7 @@ describe('App', () => {
         it('获取用户私密信息 #有对应用户', done => {
             let api = '/resources/user_private_info?' + QS.stringify({
                 userid: guest_userid,
-                checksum: Crypto.md5(guest_userid + '_' + AccountConfig.keys.checksum_key)
+                checksum: Crypto.md5(guest_userid + '_' + ConfigUtils.keys.checksum_key)
             });
             app.get(api).expect(200).end((err, res) => {
                 if (err) {
@@ -280,10 +281,10 @@ describe('App', () => {
                 let msg = res.body.message;
                 Should.not.equal(msg, undefined);
                 Should.equal(msg.userInfo.userid, "" + guest_userid);
-                Should.equal(msg.userInfo.lv, AccountConfig.user.lv);
-                Should.equal(msg.userInfo.exp, AccountConfig.user.exp);
-                Should.equal(msg.userInfo.coins, AccountConfig.user.coins);
-                Should.equal(msg.userInfo.gems, AccountConfig.user.gems);
+                Should.equal(msg.userInfo.lv, ConfigPlatform.user.lv);
+                Should.equal(msg.userInfo.exp, ConfigPlatform.user.exp);
+                Should.equal(msg.userInfo.coins, ConfigPlatform.user.coins);
+                Should.equal(msg.userInfo.gems, ConfigPlatform.user.gems);
                 done();
             });
         });
@@ -367,7 +368,7 @@ describe('App', () => {
                 userid: email_userid,
                 type: type,
                 amount: amount,
-                checksum: Crypto.md5(Util.format('%s_%s_%s_%s', email_userid, type, amount, AccountConfig.keys.checksum_key))
+                checksum: Crypto.md5(Util.format('%s_%s_%s_%s', email_userid, type, amount, ConfigUtils.keys.checksum_key))
             }).expect(200).end((err, res) => {
                 if (err) {
                     Logger.error('Request API %s Failed, err: ', api, err);
@@ -378,10 +379,10 @@ describe('App', () => {
                 let msg = res.body.message;
                 Should.not.equal(msg, undefined);
                 Should.equal(msg.userInfo.userid, email_userid);
-                Should.equal(msg.userInfo.lv, AccountConfig.user.lv);
-                Should.equal(msg.userInfo.exp, AccountConfig.user.exp);
-                Should.equal(msg.userInfo.coins, AccountConfig.user.coins + 10);
-                Should.equal(msg.userInfo.gems, AccountConfig.user.gems);
+                Should.equal(msg.userInfo.lv, ConfigPlatform.user.lv);
+                Should.equal(msg.userInfo.exp, ConfigPlatform.user.exp);
+                Should.equal(msg.userInfo.coins, ConfigPlatform.user.coins + 10);
+                Should.equal(msg.userInfo.gems, ConfigPlatform.user.gems);
 
                 Should.equal(msg.addInfo.coins, amount);
                 done();
@@ -395,7 +396,7 @@ describe('App', () => {
                 userid: email_userid,
                 type: type,
                 amount: amount,
-                checksum: Crypto.md5(Util.format('%s_%s_%s_%s', email_userid, type, amount, AccountConfig.keys.checksum_key))
+                checksum: Crypto.md5(Util.format('%s_%s_%s_%s', email_userid, type, amount, ConfigUtils.keys.checksum_key))
             }).expect(200).end((err, res) => {
                 if (err) {
                     Logger.error('Request API %s Failed, err: ', api, err);
@@ -406,10 +407,10 @@ describe('App', () => {
                 let msg = res.body.message;
                 Should.not.equal(msg, undefined);
                 Should.equal(msg.userInfo.userid, email_userid);
-                Should.equal(msg.userInfo.lv, AccountConfig.user.lv);
-                Should.equal(msg.userInfo.exp, AccountConfig.user.exp);
-                Should.equal(msg.userInfo.coins, AccountConfig.user.coins);
-                Should.equal(msg.userInfo.gems, AccountConfig.user.gems);
+                Should.equal(msg.userInfo.lv, ConfigPlatform.user.lv);
+                Should.equal(msg.userInfo.exp, ConfigPlatform.user.exp);
+                Should.equal(msg.userInfo.coins, ConfigPlatform.user.coins);
+                Should.equal(msg.userInfo.gems, ConfigPlatform.user.gems);
 
                 Should.equal(msg.costInfo.coins, amount);
                 done();
@@ -424,7 +425,7 @@ describe('App', () => {
                 userid: email_userid,
                 type: type,
                 amount: amount,
-                checksum: Crypto.md5(Util.format('%s_%s_%s_%s', email_userid, type, amount, AccountConfig.keys.checksum_key))
+                checksum: Crypto.md5(Util.format('%s_%s_%s_%s', email_userid, type, amount, ConfigUtils.keys.checksum_key))
             }).expect(200).end((err, res) => {
                 if (err) {
                     Logger.error('Request API %s Failed, err: ', api, err);
@@ -435,10 +436,10 @@ describe('App', () => {
                 let msg = res.body.message;
                 Should.not.equal(msg, undefined);
                 Should.equal(msg.userInfo.userid, email_userid);
-                Should.equal(msg.userInfo.lv, AccountConfig.user.lv);
-                Should.equal(msg.userInfo.exp, AccountConfig.user.exp);
-                Should.equal(msg.userInfo.coins, AccountConfig.user.coins);
-                Should.equal(msg.userInfo.gems, AccountConfig.user.gems + 10);
+                Should.equal(msg.userInfo.lv, ConfigPlatform.user.lv);
+                Should.equal(msg.userInfo.exp, ConfigPlatform.user.exp);
+                Should.equal(msg.userInfo.coins, ConfigPlatform.user.coins);
+                Should.equal(msg.userInfo.gems, ConfigPlatform.user.gems + 10);
 
                 Should.equal(msg.addInfo.gems, amount);
                 done();
@@ -452,7 +453,7 @@ describe('App', () => {
                 userid: email_userid,
                 type: type,
                 amount: amount,
-                checksum: Crypto.md5(Util.format('%s_%s_%s_%s', email_userid, type, amount, AccountConfig.keys.checksum_key))
+                checksum: Crypto.md5(Util.format('%s_%s_%s_%s', email_userid, type, amount, ConfigUtils.keys.checksum_key))
             }).expect(200).end((err, res) => {
                 if (err) {
                     Logger.error('Request API %s Failed, err: ', api, err);
@@ -463,10 +464,10 @@ describe('App', () => {
                 let msg = res.body.message;
                 Should.not.equal(msg, undefined);
                 Should.equal(msg.userInfo.userid, email_userid);
-                Should.equal(msg.userInfo.lv, AccountConfig.user.lv);
-                Should.equal(msg.userInfo.exp, AccountConfig.user.exp);
-                Should.equal(msg.userInfo.coins, AccountConfig.user.coins);
-                Should.equal(msg.userInfo.gems, AccountConfig.user.gems);
+                Should.equal(msg.userInfo.lv, ConfigPlatform.user.lv);
+                Should.equal(msg.userInfo.exp, ConfigPlatform.user.exp);
+                Should.equal(msg.userInfo.coins, ConfigPlatform.user.coins);
+                Should.equal(msg.userInfo.gems, ConfigPlatform.user.gems);
 
                 Should.equal(msg.costInfo.gems, amount);
                 done();
@@ -481,7 +482,7 @@ describe('App', () => {
                 userid: guest_userid,
                 type: type,
                 amount: amount,
-                checksum: Crypto.md5(Util.format('%s_%s_%s_%s', guest_userid, type, amount, AccountConfig.keys.checksum_key))
+                checksum: Crypto.md5(Util.format('%s_%s_%s_%s', guest_userid, type, amount, ConfigUtils.keys.checksum_key))
             }).expect(200).end((err, res) => {
                 if (err) {
                     Logger.error('Request API %s Failed, err: ', api, err);
@@ -492,10 +493,10 @@ describe('App', () => {
                 let msg = res.body.message;
                 Should.not.equal(msg, undefined);
                 Should.equal(msg.userInfo.userid, guest_userid);
-                Should.equal(msg.userInfo.lv, AccountConfig.user.lv + 10);
-                Should.equal(msg.userInfo.exp, AccountConfig.user.exp);
-                Should.equal(msg.userInfo.coins, AccountConfig.user.coins);
-                Should.equal(msg.userInfo.gems, AccountConfig.user.gems);
+                Should.equal(msg.userInfo.lv, ConfigPlatform.user.lv + 10);
+                Should.equal(msg.userInfo.exp, ConfigPlatform.user.exp);
+                Should.equal(msg.userInfo.coins, ConfigPlatform.user.coins);
+                Should.equal(msg.userInfo.gems, ConfigPlatform.user.gems);
 
                 Should.equal(msg.addInfo.lv, amount);
                 done();
@@ -509,7 +510,7 @@ describe('App', () => {
                 userid: guest_userid,
                 type: type,
                 amount: amount,
-                checksum: Crypto.md5(Util.format('%s_%s_%s_%s', guest_userid, type, amount, AccountConfig.keys.checksum_key))
+                checksum: Crypto.md5(Util.format('%s_%s_%s_%s', guest_userid, type, amount, ConfigUtils.keys.checksum_key))
             }).expect(200).end((err, res) => {
                 if (err) {
                     Logger.error('Request API %s Failed, err: ', api, err);
@@ -520,10 +521,10 @@ describe('App', () => {
                 let msg = res.body.message;
                 Should.not.equal(msg, undefined);
                 Should.equal(msg.userInfo.userid, guest_userid);
-                Should.equal(msg.userInfo.lv, AccountConfig.user.lv + 10);
-                Should.equal(msg.userInfo.exp, AccountConfig.user.exp + 10);
-                Should.equal(msg.userInfo.coins, AccountConfig.user.coins);
-                Should.equal(msg.userInfo.gems, AccountConfig.user.gems);
+                Should.equal(msg.userInfo.lv, ConfigPlatform.user.lv + 10);
+                Should.equal(msg.userInfo.exp, ConfigPlatform.user.exp + 10);
+                Should.equal(msg.userInfo.coins, ConfigPlatform.user.coins);
+                Should.equal(msg.userInfo.gems, ConfigPlatform.user.gems);
 
                 Should.equal(msg.addInfo.exp, amount);
                 done();
@@ -538,7 +539,7 @@ describe('App', () => {
                 userid: email_userid,
                 type: type,
                 amount: amount,
-                checksum: Crypto.md5(Util.format('%s_%s_%s_%s123', email_userid, type, amount, AccountConfig.keys.checksum_key))
+                checksum: Crypto.md5(Util.format('%s_%s_%s_%s123', email_userid, type, amount, ConfigUtils.keys.checksum_key))
             }).expect(200).end((err, res) => {
                 if (err) {
                     Logger.error('Request API %s Failed, err: ', api, err);
@@ -560,7 +561,7 @@ describe('App', () => {
                 userid: email_userid,
                 type: type,
                 amount: amount,
-                checksum: Crypto.md5(Util.format('%s_%s_%s_%s123', email_userid, type, amount, AccountConfig.keys.checksum_key))
+                checksum: Crypto.md5(Util.format('%s_%s_%s_%s123', email_userid, type, amount, ConfigUtils.keys.checksum_key))
             }).expect(200).end((err, res) => {
                 if (err) {
                     Logger.error('Request API %s Failed, err: ', api, err);
@@ -582,7 +583,7 @@ describe('App', () => {
                 userid: guest_userid,
                 type: type,
                 amount: amount,
-                checksum: Crypto.md5(Util.format('%s_%s_%s_%s', guest_userid, type, amount, AccountConfig.keys.checksum_key))
+                checksum: Crypto.md5(Util.format('%s_%s_%s_%s', guest_userid, type, amount, ConfigUtils.keys.checksum_key))
             }).expect(200).end((err, res) => {
                 if (err) {
                     Logger.error('Request API %s Failed, err: ', api, err);
@@ -604,7 +605,7 @@ describe('App', () => {
                 userid: guest_userid,
                 type: type,
                 amount: amount,
-                checksum: Crypto.md5(Util.format('%s_%s_%s_%s', guest_userid, type, amount, AccountConfig.keys.checksum_key))
+                checksum: Crypto.md5(Util.format('%s_%s_%s_%s', guest_userid, type, amount, ConfigUtils.keys.checksum_key))
             }).expect(200).end((err, res) => {
                 if (err) {
                     Logger.error('Request API %s Failed, err: ', api, err);
@@ -626,7 +627,7 @@ describe('App', () => {
                 userid: guest_userid,
                 type: type,
                 amount: -amount,
-                checksum: Crypto.md5(Util.format('%s_%s_%s_%s', guest_userid, type, -amount, AccountConfig.keys.checksum_key))
+                checksum: Crypto.md5(Util.format('%s_%s_%s_%s', guest_userid, type, -amount, ConfigUtils.keys.checksum_key))
             }).expect(200).end((err, res) => {
                 if (err) {
                     Logger.error('Request API %s Failed, err: ', api, err);
@@ -648,7 +649,7 @@ describe('App', () => {
                 userid: guest_userid,
                 type: type,
                 amount: -amount,
-                checksum: Crypto.md5(Util.format('%s_%s_%s_%s', guest_userid, type, -amount, AccountConfig.keys.checksum_key))
+                checksum: Crypto.md5(Util.format('%s_%s_%s_%s', guest_userid, type, -amount, ConfigUtils.keys.checksum_key))
             }).expect(200).end((err, res) => {
                 if (err) {
                     Logger.error('Request API %s Failed, err: ', api, err);

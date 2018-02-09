@@ -13,7 +13,7 @@ const Util = require("util");
 const Logger = require("log4js").getLogger("sql");
 const Crypto = require('../utils/crypto');
 
-let config = require("../../config/mysql_platform");
+let ConfigMySQL = require("../../config/mysql_platform");
 
 let pool = null;
 
@@ -28,7 +28,7 @@ let pool = null;
  * Connect To MySQL, Create Connection Pool
  */
 function init() {
-    pool = MySQL.createPool(config);
+    pool = MySQL.createPool(ConfigMySQL);
     Logger.warn("Pool Created");
 }
 

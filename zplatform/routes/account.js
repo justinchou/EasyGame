@@ -21,8 +21,9 @@ const Crypto = require('../../zutils/utils/crypto');
 const WeChatAPI = require('../../zutils/utils/wechat');
 const HttpResponser = require('../../zutils/classes/HttpResponser');
 
-const ConfigAccount = require('../../config/account');
+const ConfigPlatform = require('../../config/platform');
 const ConfigHall = require('../../config/hall');
+const ConfigUtils = require('../../config/utils');
 const ErrorCode = require('../config/error_code');
 
 let AccountModel = require('../../zutils/model/account.model');
@@ -112,7 +113,7 @@ Router.get('/register', function (req, res) {
     let sex = req.query.sex || 1;
     let headimgurl = req.query.headimgurl || '';
     let checksum = req.query.checksum;
-    if (checksum !== Crypto.md5(Util.format('%s_%s_%s_%s', account, type, password, ConfigAccount.keys.checksum_key))) {
+    if (checksum !== Crypto.md5(Util.format('%s_%s_%s_%s', account, type, password, ConfigUtils.keys.checksum_key))) {
         res.json(new HttpResponser().fill(ErrorCode.APICheckSumFailed, {'message': 'check sum failed'}));
         return;
     }
@@ -143,7 +144,7 @@ Router.get('/guest_auth', function (req, res) {
             return;
         }
         let account = req.query.account;
-        let sign = Crypto.md5(account + req.ip + ConfigAccount.keys.account_key);
+        let sign = Crypto.md5(account + req.ip + ConfigUtils.keys.account_key);
         let auth = {
             account: account,
             userid: data.userid,
@@ -175,7 +176,7 @@ Router.get('/email_auth', function (req, res) {
             return;
         }
         let account = req.query.account;
-        let sign = Crypto.md5(account + req.ip + ConfigAccount.keys.account_key);
+        let sign = Crypto.md5(account + req.ip + ConfigUtils.keys.account_key);
         let auth = {
             account: account,
             userid: data.userid,
@@ -193,7 +194,7 @@ Router.get('/wechat_auth', function (req, res) {
     let code = req.query.code;
     let type = "wechat";
     let os = req.query.os;
-    let info = ConfigAccount.app[os];
+    let info = ConfigUtils.app[os];
 
     if (!code || !os || !info) {
         res.json(new HttpResponser().fill(ErrorCode.InvalidParams, {"message":"invalid params"}));
@@ -240,7 +241,7 @@ Router.get('/wechat_auth', function (req, res) {
                     return;
                 }
 
-                let sign = Crypto.md5(account + req.ip + ConfigAccount.keys.account_key);
+                let sign = Crypto.md5(account + req.ip + ConfigUtils.keys.account_key);
                 let auth = {
                     account: account,
                     userid: userid,

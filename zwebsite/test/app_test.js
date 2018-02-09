@@ -14,7 +14,7 @@ let Request = require('supertest');
 let App = require('../app');
 
 let Logger = require('log4js').getLogger('mocha');
-let MochaConfig = require('../../config/mocha');
+let ConfigMocha = require('../../config/mocha');
 
 describe('App', () => {
     describe('#App Run 检测APP基础功能', () => {
@@ -31,7 +31,7 @@ describe('App', () => {
                 if (err) {
                     Logger.error('Request API %s Failed, err: ', api, err);
                 }
-                if (MochaConfig.debug > 1) {
+                if (ConfigMocha.debug > 1) {
                     Logger.info('%s: res.text [ %s ], res.body [ %j ]', api, res.text, res.body);
                     Logger.info('%s: res.header [ %j ], res.headers [ %j ]', api, res.header, res.headers);
                     Logger.info('%s: res.status [ %s ], res.statusCode [ %s ]', api, res.status, res.statusCode);
@@ -46,7 +46,7 @@ describe('App', () => {
                 if (err) {
                     Logger.error('Request API %s Failed, err: ', api, err);
                 }
-                if (MochaConfig.debug > 1) {
+                if (ConfigMocha.debug > 1) {
                     Logger.info('%s: res.text [ %s ], res.body [ %j ]', api, res.text, res.body);
                     Logger.info('%s: res.header [ %j ], res.headers [ %j ]', api, res.header, res.headers);
                     Logger.info('%s: res.status [ %s ], res.statusCode [ %s ]', api, res.status, res.statusCode);

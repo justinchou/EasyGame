@@ -19,7 +19,7 @@ const HttpResponser = require('../zutils/classes/HttpResponser');
 const ResMonitor = require('../zutils/utils/monitor');
 
 const ErrorCode = require('./config/error_code');
-const MochaConfig = require('../config/mocha');
+const ConfigMocha = require('../config/mocha');
 
 const LogStat = require('log4js').getLogger('statistics');
 const Logger = require('log4js').getLogger('account');
@@ -66,7 +66,7 @@ app.use(function (err, req, res, next) {
     res.json(new HttpResponser().fill(msg));
 });
 
-if (!MochaConfig.debug) {
+if (!ConfigMocha.debug) {
     setInterval(function () {
         let info = ResMonitor.getSysRss();
         LogStat.info("Gid:%s Uid:%s Pid:%s Uptime:%s Memory:%j", info.gid, info.uid, info.pid, info.uptime, info.mem);

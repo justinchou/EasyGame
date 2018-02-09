@@ -14,7 +14,7 @@ let Path = require('path');
 require('log4js').configure(Path.join(__dirname, '../../../config/log4js.json'));
 
 let Logger = require('log4js').getLogger('mocha');
-let MochaConfig = require('../../../config/mocha');
+let ConfigMocha = require('../../../config/mocha');
 
 let AccountModel = require('../../model/account.model');
 
@@ -22,15 +22,15 @@ describe('Model', () => {
     describe('#AccountModel 检测Account数据表处理函数', () => {
 
         before(done => {
-            if (MochaConfig.debug > 1) Logger.debug('Wait Database Connection For 3s');
+            if (ConfigMocha.debug > 1) Logger.debug('Wait Database Connection For 3s');
             setTimeout(function () {
-                if (MochaConfig.debug > 1) Logger.debug('Maybe Database Connected');
+                if (ConfigMocha.debug > 1) Logger.debug('Maybe Database Connected');
                 done();
             }, 1000);
         });
 
         beforeEach(function() {
-            this.timeout(MochaConfig.timeout);
+            this.timeout(ConfigMocha.timeout);
         });
 
         after(done => {

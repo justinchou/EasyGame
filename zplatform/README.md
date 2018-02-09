@@ -1,20 +1,20 @@
-账号服务器
+平台服务器 Platform
 ===
 
 ## 配置文件
 
-*配置文件*
+**配置文件**
 
-/EasyGame/config/account.json
+/EasyGame/config/platform.json
 /EasyGame/config/hall.json
 
-*日志配置文件*
+**日志配置文件**
 
 /EasyGame/config/log4js.json
 
 用到的日志分类: account, statistics, mocha
 
-*测试依赖*
+**测试依赖**
 
 /EasyGame/config/mocha.json
 
