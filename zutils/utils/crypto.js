@@ -13,6 +13,7 @@
 
 //导入模块
 const Crypto = require('crypto');
+const Util = require('util');
 
 /**
  * aes192加密模块
@@ -106,6 +107,42 @@ function fromBase64(str) {
     return res;
 }
 
+const ConfigUtils = require('../../config/utils');
+
+function calcSign() {
+    let args = [];
+    for (let i = 0; i < arguments.length; i++) {
+        args.push(arguments[i]);
+    }
+    args.push(ConfigUtils.keys.accountKey);
+    let str = args.join('_');
+    return md5(str);
+}
+
+function calcSum() {
+    let args = [];
+    for (let i = 0; i < arguments.length; i++) {
+        args.push(arguments[i]);
+    }
+    args.push(ConfigUtils.keys.checksumKey);
+    let str = args.join('_');
+    return md5(str);
+}
+
+function calcServer() {
+    let args = [];
+    for (let i = 0; i < arguments.length; i++) {
+        args.push(arguments[i]);
+    }
+    args.push(ConfigUtils.keys.serverKey);
+    let str = args.join('_');
+    return md5(str);
+}
+
+function calcServerAddr(host, port) {
+    return Util.format("%s:%s", host, port);
+}
+
 module.exports = {
     "encAse192": encAse192,
     "decAse192": decAse192,
@@ -113,5 +150,10 @@ module.exports = {
     "md5": md5,
     "sha1": sha1,
     "toBase64": toBase64,
-    "fromBase64": fromBase64
+    "fromBase64": fromBase64,
+
+    "calcSign": calcSign,
+    "calcSum": calcSum,
+    "calcServer": calcServer,
+    "calcServerAddr": calcServerAddr
 };

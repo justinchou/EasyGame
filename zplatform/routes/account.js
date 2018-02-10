@@ -113,7 +113,7 @@ Router.get('/register', function (req, res) {
     let sex = req.query.sex || 1;
     let headimgurl = req.query.headimgurl || '';
     let checksum = req.query.checksum;
-    if (checksum !== Crypto.md5(Util.format('%s_%s_%s_%s', account, type, password, ConfigUtils.keys.checksum_key))) {
+    if (checksum !== Crypto.calcSum(account, type, password)) {
         res.json(new HttpResponser().fill(ErrorCode.APICheckSumFailed, {'message': 'check sum failed'}));
         return;
     }
@@ -127,7 +127,7 @@ Router.get('/register', function (req, res) {
     });
 });
 
-Router.get('/guest_auth', function (req, res) {
+Router.get('/guestAuth', function (req, res) {
     let account = req.query.account;
     let type = "guest";
 
@@ -144,11 +144,11 @@ Router.get('/guest_auth', function (req, res) {
             return;
         }
         let account = req.query.account;
-        let sign = Crypto.md5(account + req.ip + ConfigUtils.keys.account_key);
+        let sign = Crypto.calcSign(account, req.ip);
         let auth = {
             account: account,
             userid: data.userid,
-            hall_server: ConfigHall.host + ':' + ConfigHall.port,
+            hallServer: ConfigHall.host + ':' + ConfigHall.port,
             sign: sign
         };
 
@@ -158,7 +158,7 @@ Router.get('/guest_auth', function (req, res) {
     });
 });
 
-Router.get('/email_auth', function (req, res) {
+Router.get('/emailAuth', function (req, res) {
     let account = req.query.account;
     let type = 'email';
     let password = req.query.password;
@@ -176,11 +176,11 @@ Router.get('/email_auth', function (req, res) {
             return;
         }
         let account = req.query.account;
-        let sign = Crypto.md5(account + req.ip + ConfigUtils.keys.account_key);
+        let sign = Crypto.calcSign(account, req.ip);
         let auth = {
             account: account,
             userid: data.userid,
-            hall_server: ConfigHall.host + ':' + ConfigHall.port,
+            hallServer: Crypto.calcServerAddr(ConfigHall.host, ConfigHall.port),
             sign: sign
         };
 
@@ -190,7 +190,7 @@ Router.get('/email_auth', function (req, res) {
     });
 });
 
-Router.get('/wechat_auth', function (req, res) {
+Router.get('/wechatAuth', function (req, res) {
     let code = req.query.code;
     let type = "wechat";
     let os = req.query.os;
@@ -215,11 +215,11 @@ Router.get('/wechat_auth', function (req, res) {
             return;
         }
 
-        let access_token = data.access_token;
+        let accessToken = data.access_token;
         let openid = data.openid;
-        WeChatAPI.getStateInfo(access_token, openid, function (err, data) {
+        WeChatAPI.getStateInfo(accessToken, openid, function (err, data) {
             if (err) {
-                res.json(new HttpResponser().fill(ErrorCode.WeChatAPIError, {"message": "load wechat state_info failed"}));
+                res.json(new HttpResponser().fill(ErrorCode.WeChatAPIError, {"message": "load wechat stateInfo failed"}));
                 Logger.error('Load Wechat StateInfo Failed: params [ %j ] err ', req.query, err);
                 return;
             }
@@ -234,18 +234,18 @@ Router.get('/wechat_auth', function (req, res) {
             let nickname = data.nickname;
             let sex = data.sex;
             let headimgurl = data.headimgurl;
-            create_user(account, type, "", nickname, sex, headimgurl, function (err, userid) {
+            createUser(account, type, "", nickname, sex, headimgurl, function (err, userid) {
                 if (err || !userid) {
                     res.json(new HttpResponser().fill(ErrorCode.WeChatAPIError, {"message": "create wechat user info failed"}));
                     Logger.error('Create Wechat Userinfo Failed: params [ %j ] err ', req.query, err);
                     return;
                 }
 
-                let sign = Crypto.md5(account + req.ip + ConfigUtils.keys.account_key);
+                let sign = Crypto.calcSign(account, req.ip);
                 let auth = {
                     account: account,
                     userid: userid,
-                    hall_server: ConfigHall.host + ':' + ConfigHall.port,
+                    hallServer: Crypto.calcServerAddr(ConfigHall.host, ConfigHall.port),
                     sign: sign
                 };
 

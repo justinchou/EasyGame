@@ -18,12 +18,11 @@ const ConfigMocha = require('../../../config/mocha');
 const HttpResponser = require('../../classes/HttpResponser');
 
 describe('HttpResponser', () => {
-    let decode = {code: 0, message: {message:"success"}};
+    let decode = {code: 0, message: {message: "success"}, "attachment": [], "stack": {}};
     let encode = JSON.stringify(decode);
 
     it('should be a HttpResponser Duck Object', () => {
         let res = new HttpResponser().fill(decode.code, decode.message);
-        Should.
 
         res = JSON.parse(JSON.stringify(res));
         Should.equal(res.code, decode.code);
@@ -32,7 +31,7 @@ describe('HttpResponser', () => {
 
     it('should encode', () => {
         let res = new HttpResponser().fill(decode.code, decode.message);
-        Should.equal(res.encode, encode);
+        Should.equal(res.encode(), encode);
 
         res = JSON.parse(res.encode());
         Should.equal(res.code, 0);

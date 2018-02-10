@@ -28,20 +28,20 @@ const ErrorCode = require('../config/errorCode');
 let AccountModel = require('../../zutils/model/account.model');
 let UserModel = require('../../zutils/model/user.model');
 
-Router.get('/client_info', function (req, res) {
-    let client_info = {
-        version_min: ConfigUtils.version.client_min,
-        version_new: ConfigUtils.version.client_new,
-        app_web: ConfigUtils.version.client_web,
-        hall_server: ConfigHall.host + ':' + ConfigHall.port
+Router.get('/clientInfo', function (req, res) {
+    let clientInfo = {
+        versionMin: ConfigUtils.version.clientMin,
+        versionNew: ConfigUtils.version.clientNew,
+        appWeb: ConfigUtils.version.clientWeb,
+        hallServer: Crypto.calcServerAddr(ConfigHall.host, ConfigHall.port)
     };
-    res.json(new HttpResponser().fill(ErrorCode.Success, {'client_info': client_info}));
+    res.json(new HttpResponser().fill(ErrorCode.Success, {'clientInfo': clientInfo}));
 });
 
-Router.get('/user_public_info', function (req, res) {
+Router.get('/userPublicInfo', function (req, res) {
     let userid = req.query.userid;
     let checksum = req.query.checksum;
-    if (checksum !== Crypto.md5(Util.format('%s_%s', userid, ConfigUtils.keys.checksum_key))) {
+    if (checksum !== Crypto.calcSum(userid)) {
         res.json(new HttpResponser().fill(ErrorCode.APICheckSumFailed, {'message': 'check sum failed'}));
         return;
     }
@@ -62,10 +62,10 @@ Router.get('/user_public_info', function (req, res) {
     });
 });
 
-Router.get('/user_private_info', function (req, res) {
+Router.get('/userPrivateInfo', function (req, res) {
     let userid = req.query.userid;
     let checksum = req.query.checksum;
-    if (checksum !== Crypto.md5(Util.format('%s_%s', userid, ConfigUtils.keys.checksum_key))) {
+    if (checksum !== Crypto.calcSum(userid)) {
         res.json(new HttpResponser().fill(ErrorCode.APICheckSumFailed, {'message': 'check sum failed'}));
         return;
     }
@@ -87,12 +87,12 @@ Router.get('/user_private_info', function (req, res) {
     });
 });
 
-Router.post('/add_user_res', function (req, res) {
+Router.post('/addUserRes', function (req, res) {
     let userid = req.body.userid;
     let type = req.body.type;
     let amount = req.body.amount;
     let checksum = req.body.checksum;
-    if (checksum !== Crypto.md5(Util.format('%s_%s_%s_%s', userid, type, amount, ConfigUtils.keys.checksum_key))) {
+    if (checksum !== Crypto.calcSum(userid, type, amount)) {
         res.json(new HttpResponser().fill(ErrorCode.APICheckSumFailed, {'message': 'check sum failed'}));
         return;
     }
@@ -150,12 +150,12 @@ Router.post('/add_user_res', function (req, res) {
     }
 });
 
-Router.post('/cost_user_res', function (req, res) {
+Router.post('/costUserRes', function (req, res) {
     let userid = req.body.userid;
     let type = req.body.type;
     let amount = req.body.amount;
     let checksum = req.body.checksum;
-    if (checksum !== Crypto.md5(Util.format('%s_%s_%s_%s', userid, type, amount, ConfigUtils.keys.checksum_key))) {
+    if (checksum !== Crypto.calcSum(userid, type, amount)) {
         res.json(new HttpResponser().fill(ErrorCode.APICheckSumFailed, {'message': 'check sum failed'}));
         return;
     }

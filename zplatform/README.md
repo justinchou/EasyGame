@@ -28,7 +28,7 @@ zutils/user.model.js
 
 数据配置文件
 
-/EasyGame/config/mysql_platform.json
+/EasyGame/config/mysqlPlatform.json
 
 
 

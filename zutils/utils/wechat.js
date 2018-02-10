@@ -34,9 +34,9 @@ function getAccessToken(code, info, next) {
     });
 }
 
-function getStateInfo(access_token, openid, next) {
+function getStateInfo(accessToken, openid, next) {
     let data = {
-        access_token: access_token,
+        access_token: accessToken,
         openid: openid
     };
 

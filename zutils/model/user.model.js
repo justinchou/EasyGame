@@ -14,7 +14,7 @@ const Logger = require("log4js").getLogger("sql");
 const Crypto = require('../utils/crypto');
 
 const ConfigMySQL = require("../../config/mysqlPlatform");
-const ConfigUserInitInfo = require("../../config/platform").user_init_info;
+const ConfigUserInitInfo = require("../../config/platform").userInitInfo;
 
 let pool = null;
 

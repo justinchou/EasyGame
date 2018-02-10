@@ -108,10 +108,10 @@ describe('Model', () => {
                 Should.equal(info.nickname, nickname);
                 Should.equal(info.gender, gender);
                 Should.equal(info.headimg, headimg);
-                Should.equal(info.lv, ConfigPlatform.user.lv);
-                Should.equal(info.exp, ConfigPlatform.user.exp);
-                Should.equal(info.coins, ConfigPlatform.user.coins);
-                Should.equal(info.gems, ConfigPlatform.user.gems);
+                Should.equal(info.lv, ConfigPlatform.userInitInfo.lv);
+                Should.equal(info.exp, ConfigPlatform.userInitInfo.exp);
+                Should.equal(info.coins, ConfigPlatform.userInitInfo.coins);
+                Should.equal(info.gems, ConfigPlatform.userInitInfo.gems);
                 done();
             });
         });
@@ -129,10 +129,10 @@ describe('Model', () => {
         it('Load User Pri #Exist', done => {
             UserModel.userPriInfo(userid, (err, info) => {
                 Should.equal(err, null);
-                Should.equal(info.lv, ConfigPlatform.user.lv);
-                Should.equal(info.exp, ConfigPlatform.user.exp);
-                Should.equal(info.coins, ConfigPlatform.user.coins);
-                Should.equal(info.gems, ConfigPlatform.user.gems);
+                Should.equal(info.lv, ConfigPlatform.userInitInfo.lv);
+                Should.equal(info.exp, ConfigPlatform.userInitInfo.exp);
+                Should.equal(info.coins, ConfigPlatform.userInitInfo.coins);
+                Should.equal(info.gems, ConfigPlatform.userInitInfo.gems);
                 done();
             });
         });
@@ -169,10 +169,10 @@ describe('Model', () => {
         it('Load User Pri #Exist', done => {
             UserModel.userPriInfo(userid, (err, info) => {
                 Should.equal(err, null);
-                Should.equal(info.lv, ConfigPlatform.user.lv);
-                Should.equal(info.exp, ConfigPlatform.user.exp);
-                Should.equal(info.coins, ConfigPlatform.user.coins);
-                Should.equal(info.gems, ConfigPlatform.user.gems + amount);
+                Should.equal(info.lv, ConfigPlatform.userInitInfo.lv);
+                Should.equal(info.exp, ConfigPlatform.userInitInfo.exp);
+                Should.equal(info.coins, ConfigPlatform.userInitInfo.coins);
+                Should.equal(info.gems, ConfigPlatform.userInitInfo.gems + amount);
                 done();
             });
         });
@@ -187,10 +187,10 @@ describe('Model', () => {
         it('Load User Pri #Exist', done => {
             UserModel.userPriInfo(userid, (err, info) => {
                 Should.equal(err, null);
-                Should.equal(info.lv, ConfigPlatform.user.lv);
-                Should.equal(info.exp, ConfigPlatform.user.exp);
-                Should.equal(info.coins, ConfigPlatform.user.coins);
-                Should.equal(info.gems, ConfigPlatform.user.gems);
+                Should.equal(info.lv, ConfigPlatform.userInitInfo.lv);
+                Should.equal(info.exp, ConfigPlatform.userInitInfo.exp);
+                Should.equal(info.coins, ConfigPlatform.userInitInfo.coins);
+                Should.equal(info.gems, ConfigPlatform.userInitInfo.gems);
                 done();
             });
         });
@@ -205,10 +205,10 @@ describe('Model', () => {
         it('Load User Pri #Exist', done => {
             UserModel.userPriInfo(userid, (err, info) => {
                 Should.equal(err, null);
-                Should.equal(info.lv, ConfigPlatform.user.lv);
-                Should.equal(info.exp, ConfigPlatform.user.exp);
-                Should.equal(info.coins, ConfigPlatform.user.coins + amount);
-                Should.equal(info.gems, ConfigPlatform.user.gems);
+                Should.equal(info.lv, ConfigPlatform.userInitInfo.lv);
+                Should.equal(info.exp, ConfigPlatform.userInitInfo.exp);
+                Should.equal(info.coins, ConfigPlatform.userInitInfo.coins + amount);
+                Should.equal(info.gems, ConfigPlatform.userInitInfo.gems);
                 done();
             });
         });
@@ -223,10 +223,10 @@ describe('Model', () => {
         it('Load User Pri #Exist', done => {
             UserModel.userPriInfo(userid, (err, info) => {
                 Should.equal(err, null);
-                Should.equal(info.lv, ConfigPlatform.user.lv);
-                Should.equal(info.exp, ConfigPlatform.user.exp);
-                Should.equal(info.coins, ConfigPlatform.user.coins);
-                Should.equal(info.gems, ConfigPlatform.user.gems);
+                Should.equal(info.lv, ConfigPlatform.userInitInfo.lv);
+                Should.equal(info.exp, ConfigPlatform.userInitInfo.exp);
+                Should.equal(info.coins, ConfigPlatform.userInitInfo.coins);
+                Should.equal(info.gems, ConfigPlatform.userInitInfo.gems);
                 done();
             });
         });
@@ -241,10 +241,10 @@ describe('Model', () => {
         it('Load User Pri #Exist', done => {
             UserModel.userPriInfo(userid, (err, info) => {
                 Should.equal(err, null);
-                Should.equal(info.lv, ConfigPlatform.user.lv + amount);
-                Should.equal(info.exp, ConfigPlatform.user.exp);
-                Should.equal(info.coins, ConfigPlatform.user.coins);
-                Should.equal(info.gems, ConfigPlatform.user.gems);
+                Should.equal(info.lv, ConfigPlatform.userInitInfo.lv + amount);
+                Should.equal(info.exp, ConfigPlatform.userInitInfo.exp);
+                Should.equal(info.coins, ConfigPlatform.userInitInfo.coins);
+                Should.equal(info.gems, ConfigPlatform.userInitInfo.gems);
                 done();
             });
         });
@@ -259,10 +259,10 @@ describe('Model', () => {
         it('Load User Pri #Exist', done => {
             UserModel.userPriInfo(userid, (err, info) => {
                 Should.equal(err, null);
-                Should.equal(info.lv, ConfigPlatform.user.lv + amount);
-                Should.equal(info.exp, ConfigPlatform.user.exp + amount);
-                Should.equal(info.coins, ConfigPlatform.user.coins);
-                Should.equal(info.gems, ConfigPlatform.user.gems);
+                Should.equal(info.lv, ConfigPlatform.userInitInfo.lv + amount);
+                Should.equal(info.exp, ConfigPlatform.userInitInfo.exp + amount);
+                Should.equal(info.coins, ConfigPlatform.userInitInfo.coins);
+                Should.equal(info.gems, ConfigPlatform.userInitInfo.gems);
                 done();
             });
         });
