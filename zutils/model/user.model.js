@@ -13,8 +13,8 @@ const MySQL = require("mysql");
 const Logger = require("log4js").getLogger("sql");
 const Crypto = require('../utils/crypto');
 
-let ConfigMySQL = require("../../config/mysql_platform");
-let user = require("../../config/platform").user;
+const ConfigMySQL = require("../../config/mysql_platform");
+const ConfigUserInitInfo = require("../../config/platform").user_init_info;
 
 let pool = null;
 
@@ -203,7 +203,7 @@ function createUser(nickname, gender, headimg, next) {
 
     let sql = MySQL.format(
         'INSERT INTO `user` (`nickname`,`lv`,`exp`,`coins`,`gems`,`gender`,`headimg`) VALUES(?,?,?,?,?,?,?)',
-        [nickname, user.lv, user.exp, user.coins, user.gems, gender, headimg]
+        [nickname, ConfigUserInitInfo.lv, ConfigUserInitInfo.exp, ConfigUserInitInfo.coins, ConfigUserInitInfo.gems, gender, headimg]
     );
     query(sql, function (err, rows) {
         if (err) {

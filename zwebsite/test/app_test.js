@@ -8,13 +8,13 @@
 
 'use strict';
 
-let Should = require('chai').should();
-let Request = require('supertest');
+const Should = require('chai').should();
+const Request = require('supertest');
+
+const Logger = require('log4js').getLogger('mocha');
+const ConfigMocha = require('../../config/mocha');
 
 let App = require('../app');
-
-let Logger = require('log4js').getLogger('mocha');
-let ConfigMocha = require('../../config/mocha');
 
 describe('App', () => {
     describe('#App Run 检测APP基础功能', () => {

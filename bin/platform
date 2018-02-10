@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 'use strict';
 
-let Logger = require('log4js').getLogger('system');
-let Http = require('http');
+const Logger = require('log4js').getLogger('system');
+const Http = require('http');
+
+const Config = require('../config/platform');
 
 let App = require('../zplatform/app');
-let Config = require('../config/platform');
 
 App.set('port', Config.port);
 

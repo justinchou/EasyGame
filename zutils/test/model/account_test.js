@@ -8,13 +8,13 @@
 
 'use strict';
 
-let Should = require('chai').should();
-let Path = require('path');
+const Should = require('chai').should();
+const Path = require('path');
 
 require('log4js').configure(Path.join(__dirname, '../../../config/log4js.json'));
 
-let Logger = require('log4js').getLogger('mocha');
-let ConfigMocha = require('../../../config/mocha');
+const Logger = require('log4js').getLogger('mocha');
+const ConfigMocha = require('../../../config/mocha');
 
 let AccountModel = require('../../model/account.model');
 

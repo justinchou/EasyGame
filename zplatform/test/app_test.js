@@ -8,22 +8,23 @@
 
 'use strict';
 
-let Should = require('chai').should();
-let Request = require('supertest');
-let Path = require('path');
-let Util = require('util');
-let QS = require('querystring');
+const Should = require('chai').should();
+const Request = require('supertest');
+const Path = require('path');
+const Util = require('util');
+const QS = require('querystring');
+
+const Crypto = require('../../zutils/utils/crypto');
 
 let App = require('../app');
-let Crypto = require('../../zutils/utils/crypto');
 
 require('log4js').configure(Path.join(__dirname, '../../config/log4js.json'));
-let Logger = require('log4js').getLogger('mocha');
+const Logger = require('log4js').getLogger('mocha');
 
-let ConfigPlatform = require('../../config/platform');
-let ConfigUtils = require('../../config/utils');
-let ConfigMocha = require('../../config/mocha');
-let ErrorCode = require('../config/error_code');
+const ConfigPlatform = require('../../config/platform');
+const ConfigUtils = require('../../config/utils');
+const ConfigMocha = require('../../config/mocha');
+const ErrorCode = require('../config/error_code');
 
 describe('App', () => {
 

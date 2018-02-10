@@ -8,17 +8,18 @@
 
 'use strict';
 
-let Should = require('chai').should();
-let Path = require('path');
+const Should = require('chai').should();
+const Path = require('path');
 
 require('log4js').configure(Path.join(__dirname, '../../../config/log4js.json'));
 
-let Logger = require('log4js').getLogger('mocha');
-let ConfigPlatform = require('../../../config/platform');
-let ConfigMocha = require('../../../config/mocha');
+const Logger = require('log4js').getLogger('mocha');
+const ConfigPlatform = require('../../../config/platform');
+const ConfigMocha = require('../../../config/mocha');
+
+const Crypto = require('../../utils/crypto');
 
 let UserModel = require('../../model/user.model');
-let Crypto = require('../../utils/crypto');
 
 describe('Model', () => {
     describe('#UserModel 检测User数据表处理函数', () => {
