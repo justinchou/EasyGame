@@ -13,7 +13,7 @@ const QS = require('querystring');
 
 const Logger = require('log4js').getLogger('utils');
 
-function get_access_token(code, info, next) {
+function getAccessToken(code, info, next) {
     let data = {
         appid: info.appid,
         secret: info.secret,
@@ -34,7 +34,7 @@ function get_access_token(code, info, next) {
     });
 }
 
-function get_state_info(access_token, openid, next) {
+function getStateInfo(access_token, openid, next) {
     let data = {
         access_token: access_token,
         openid: openid
@@ -54,6 +54,6 @@ function get_state_info(access_token, openid, next) {
 }
 
 module.exports = {
-    "get_access_token": get_access_token,
-    "get_state_info": get_state_info
+    "getAccessToken": getAccessToken,
+    "getStateInfo": getStateInfo
 };

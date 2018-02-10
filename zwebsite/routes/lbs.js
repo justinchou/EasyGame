@@ -13,7 +13,7 @@ const Router = Express.Router();
 
 const HttpResponser = require('../../zutils/classes/HttpResponser');
 
-const ErrorCode = require('../config/error_code');
+const ErrorCode = require('../config/errorCode');
 
 // lbs means load balance service, provide for lbs live check
 Router.all('/', function (req, res, next) {

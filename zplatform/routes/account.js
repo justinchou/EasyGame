@@ -24,12 +24,12 @@ const HttpResponser = require('../../zutils/classes/HttpResponser');
 const ConfigPlatform = require('../../config/platform');
 const ConfigHall = require('../../config/hall');
 const ConfigUtils = require('../../config/utils');
-const ErrorCode = require('../config/error_code');
+const ErrorCode = require('../config/errorCode');
 
 let AccountModel = require('../../zutils/model/account.model');
 let UserModel = require('../../zutils/model/user.model');
 
-function create_user(account, type, password, name, sex, headimgurl, next) {
+function createUser(account, type, password, name, sex, headimgurl, next) {
     let parmas = [account, type, password, name, sex, headimgurl];
 
     let retid;
@@ -118,7 +118,7 @@ Router.get('/register', function (req, res) {
         return;
     }
 
-    create_user(account, type, password, name, sex, headimgurl, (err, userid) => {
+    createUser(account, type, password, name, sex, headimgurl, (err, userid) => {
         if (err || !userid) {
             res.json(new HttpResponser().fill(ErrorCode.AccountRegistered, {'message': 'account been used'}));
         } else {
@@ -202,7 +202,7 @@ Router.get('/wechat_auth', function (req, res) {
         return;
     }
 
-    WeChatAPI.get_access_token(code, info, function (err, data) {
+    WeChatAPI.getAccessToken(code, info, function (err, data) {
         if (err) {
             res.json(new HttpResponser().fill(ErrorCode.WeChatAPIError, {"message": "load wechat access_token failed"}));
             Logger.error('Load Wechat AccessToken Failed: params [ %j ] err ', req.query, err);
@@ -217,7 +217,7 @@ Router.get('/wechat_auth', function (req, res) {
 
         let access_token = data.access_token;
         let openid = data.openid;
-        WeChatAPI.get_state_info(access_token, openid, function (err, data) {
+        WeChatAPI.getStateInfo(access_token, openid, function (err, data) {
             if (err) {
                 res.json(new HttpResponser().fill(ErrorCode.WeChatAPIError, {"message": "load wechat state_info failed"}));
                 Logger.error('Load Wechat StateInfo Failed: params [ %j ] err ', req.query, err);

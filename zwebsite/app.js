@@ -18,7 +18,7 @@ const BodyParser = require('body-parser');
 const HttpResponser = require('../zutils/classes/HttpResponser');
 const ResMonitor = require('../zutils/utils/monitor');
 
-const ErrorCode = require('./config/error_code');
+const ErrorCode = require('./config/errorCode');
 const ConfigMocha = require('../config/mocha');
 
 const LogStat = require('log4js').getLogger('statistics');

@@ -13,7 +13,7 @@ const Util = require("util");
 const Logger = require("log4js").getLogger("sql");
 const Crypto = require('../utils/crypto');
 
-const ConfigMySQL = require("../../config/mysql_platform");
+const ConfigMySQL = require("../../config/mysqlPlatform");
 
 let pool = null;
 

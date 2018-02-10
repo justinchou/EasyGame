@@ -18,13 +18,12 @@ const LogStat = require('log4js').getLogger('statistics');
 const Logger = require('log4js').getLogger('account');
 
 const Crypto = require('../../zutils/utils/crypto');
-const WeChatAPI = require('../../zutils/utils/wechat');
 const HttpResponser = require('../../zutils/classes/HttpResponser');
 
 const ConfigPlatform = require('../../config/platform');
 const ConfigUtils = require('../../config/utils');
 const ConfigHall = require('../../config/hall');
-const ErrorCode = require('../config/error_code');
+const ErrorCode = require('../config/errorCode');
 
 let AccountModel = require('../../zutils/model/account.model');
 let UserModel = require('../../zutils/model/user.model');

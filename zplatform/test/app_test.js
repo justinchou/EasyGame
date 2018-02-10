@@ -24,7 +24,7 @@ const Logger = require('log4js').getLogger('mocha');
 const ConfigPlatform = require('../../config/platform');
 const ConfigUtils = require('../../config/utils');
 const ConfigMocha = require('../../config/mocha');
-const ErrorCode = require('../config/error_code');
+const ErrorCode = require('../config/errorCode');
 
 describe('App', () => {
 
