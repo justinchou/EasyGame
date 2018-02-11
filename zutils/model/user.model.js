@@ -98,7 +98,7 @@ function destory() {
 function existUser(userid, next) {
     if (!userid) {
         next(new Error('Invalid Params'));
-        Logger.error('get exist account params [ %j ]', arguments);
+        Logger.error('get exist userid params [ %j ]', arguments);
         return;
     }
 
@@ -123,7 +123,7 @@ function existUser(userid, next) {
 function userInfo(userid, next) {
     if (!userid) {
         next(new Error('Invalid Params'));
-        Logger.error('get exist account params [ %j ]', arguments);
+        Logger.error('get exist userid params [ %j ]', arguments);
         return;
     }
 
@@ -231,7 +231,7 @@ function updateUser(userid, nickname, gender, headimg, next) {
 
     if (!userid) {
         next(new Error('Invalid Params'));
-        Logger.error('get exist account params [ %j ]', arguments);
+        Logger.error('get exist userid params [ %j ]', arguments);
         return;
     }
 
@@ -270,7 +270,7 @@ function updateUser(userid, nickname, gender, headimg, next) {
 function addGems(userid, gems, next) {
     if (!userid) {
         next(new Error('Invalid Params'));
-        Logger.error('get exist account params [ %j ]', arguments);
+        Logger.error('get exist userid params [ %j ]', arguments);
         return;
     }
 
@@ -318,7 +318,7 @@ function costGems(userid, gems, next) {
 function addCoins(userid, coins, next) {
     if (!userid) {
         next(new Error('Invalid Params'));
-        Logger.error('get exist account params [ %j ]', arguments);
+        Logger.error('get exist userid params [ %j ]', arguments);
         return;
     }
 
@@ -366,7 +366,7 @@ function costCoins(userid, coins, next) {
 function addLv(userid, lv, next) {
     if (!userid) {
         next(new Error('Invalid Params'));
-        Logger.error('get exist account params [ %j ]', arguments);
+        Logger.error('get exist userid params [ %j ]', arguments);
         return;
     }
 
@@ -394,7 +394,7 @@ function addLv(userid, lv, next) {
 function addExp(userid, exp, next) {
     if (!userid) {
         next(new Error('Invalid Params'));
-        Logger.error('get exist account params [ %j ]', arguments);
+        Logger.error('get exist userid params [ %j ]', arguments);
         return;
     }
 
