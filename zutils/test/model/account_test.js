@@ -43,7 +43,7 @@ describe('Model', () => {
         let account = Util.format('%s_%s', type, (Math.floor(Math.random() * 10000000000) + 1));
         let password = '123456';
         let newpass = '2345678';
-        let userid = '349573';
+        let userId = '349573';
 
         it('Check Account #Not Exist', done => {
             AccountModel.existAccount(account, type, (err, exist) => {
@@ -150,7 +150,7 @@ describe('Model', () => {
         });
 
         it('Link UserId #First Time', done => {
-            AccountModel.linkUserId(account, type, userid, (err, info) => {
+            AccountModel.linkUserId(account, type, userId, (err, info) => {
                 Should.equal(err, null);
                 Should.equal(info, true);
                 done();
@@ -158,7 +158,7 @@ describe('Model', () => {
         });
 
         it('Link UserId #Not First Time', done => {
-            AccountModel.linkUserId(account, type, userid, (err, info) => {
+            AccountModel.linkUserId(account, type, userId, (err, info) => {
                 Should.not.equal(err, null);
                 Should.equal(info, undefined);
                 done();
@@ -166,7 +166,7 @@ describe('Model', () => {
         });
 
         it('Link UserId #Not First Time Force', done => {
-            AccountModel.linkUserId(account, type, userid, true, (err, info) => {
+            AccountModel.linkUserId(account, type, userId, true, (err, info) => {
                 Should.equal(err, null);
                 Should.equal(info, true);
                 done();

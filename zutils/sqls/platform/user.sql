@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user` (
-  `userid` int(11) NOT NULL AUTO_INCREMENT COMMENT '用户ID',
+  `userId` int(11) NOT NULL AUTO_INCREMENT COMMENT '用户ID',
   `nickname` varchar(128) NOT NULL COMMENT '昵称',
   `lv` int(11) DEFAULT '1' COMMENT '等级',
   `exp` int(11) DEFAULT '0' COMMENT '经验',
@@ -31,7 +31,7 @@ CREATE TABLE `user` (
   `gems` int(11) DEFAULT '0' COMMENT '宝石',
   `gender` tinyint(4) DEFAULT '0' COMMENT '性别',
   `headimg` varchar(128) DEFAULT '' COMMENT '头像',
-  PRIMARY KEY (`userid`)
+  PRIMARY KEY (`userId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户数据表(字段自行拓展)';
 /*!40101 SET character_set_client = @saved_cs_client */;
 

@@ -26,7 +26,7 @@ CREATE TABLE `account` (
   `account` varchar(64) NOT NULL COMMENT '用户账号',
   `type` varchar(32) NOT NULL DEFAULT '' COMMENT '账号授权来源(guest,qq,wechat,email等)',
   `password` varchar(64) NOT NULL COMMENT '密码',
-  `userid` int(11) NOT NULL DEFAULT '0' COMMENT '绑定的用户id',
+  `userId` int(11) NOT NULL DEFAULT '0' COMMENT '绑定的用户id',
   PRIMARY KEY (`account`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='账号表';
 /*!40101 SET character_set_client = @saved_cs_client */;

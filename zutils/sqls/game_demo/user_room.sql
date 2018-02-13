@@ -23,11 +23,12 @@ DROP TABLE IF EXISTS `user_room`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user_room` (
-  `userid` int(11) DEFAULT '0' COMMENT '用户ID',
-  `roomid` varchar(8) DEFAULT '' COMMENT '房间ID - 短时间唯一',
+  `userId` int(11) DEFAULT '0' COMMENT '用户ID',
+  `roomId` varchar(12) DEFAULT '' COMMENT '房间ID - 短时间唯一',
   `room_uuid` varchar(32) DEFAULT '' COMMENT '房间唯一ID',
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
-  `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '用户与房间的关联状态: 1表示用户在房间中, 0表示已经退出/结束'
+  `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '用户与房间的关联状态: 1表示用户在房间中, 0表示已经退出/结束',
+  PRIMARY KEY (`userId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户-游戏房间关联表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 

@@ -14,15 +14,15 @@ const ConfigMocha = require('../../../config/mocha');
 
 let Singleton = require('../../classes/Singleton').getInstance();
 
-let gameinfo = require('./Singleton2_test').gameinfo;
-let userinfo = {
+let gameInfo = require('./Singleton2_test').gameInfo;
+let userInfo = {
     name: 'justin',
     age: 22,
     gender: 1,
     img: "http://"
 };
 
-Singleton.set('user', userinfo);
+Singleton.set('user', userInfo);
 
 describe('Check Singleton', () => {
 
@@ -32,14 +32,14 @@ describe('Check Singleton', () => {
 
     it('should exist user inited here', function (done) {
         let user = Singleton.get('user');
-        user.should.eql(userinfo);
+        user.should.eql(userInfo);
         done();
     });
 
     it('should exist games inited by other file', function (done) {
         setTimeout(function () {
             let games = Singleton.get('games');
-            games.should.eql(gameinfo);
+            games.should.eql(gameInfo);
             done();
         }, 1.5 * 1e3);
     });

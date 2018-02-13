@@ -24,16 +24,24 @@ DROP TABLE IF EXISTS `room`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `room` (
   `uuid` varchar(32) NOT NULL DEFAULT '' COMMENT '房间唯一ID',
-  `roomid` varchar(8) NOT NULL DEFAULT '' COMMENT '房间的数字id, 短时间内唯一, 可以用于加入房间操作',
+  `roomId` varchar(12) NOT NULL DEFAULT '' COMMENT '房间的数字id, 短时间内唯一, 可以用于加入房间操作',
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
   `finish_time` int(11) NOT NULL DEFAULT '0' COMMENT '结束时间',
+
   `config` varchar(512) NOT NULL DEFAULT '' COMMENT '房间的游戏设置',
+  `max_users` TINYINT(4) NOT NULL DEFAULT '2' COMMENT '房间最大玩家数量',
+  `cur_users` TINYINT(4) NOT NULL DEFAULT '0' COMMENT '房间当前玩家数量',
+  `min_users` TINYINT(4) NOT NULL DEFAULT '2' COMMENT '房间最小玩家数量',
+  `playing` TINYINT(2) NOT NULL DEFAULT '0' COMMENT '游戏状态, 0未开始, 1进行中, 2已结束',
+
   `data` varchar(4096) NOT NULL DEFAULT '' COMMENT '房间的玩家信息(id,name,icon等),玩家在房间内的一些小节结算数据',
   `turns` int(11) NOT NULL DEFAULT '0' COMMENT '回合制游戏的当前回合数,关卡游戏的当前关卡,分局模式的当前局数等进度标记',
-  `next` int(11) NOT NULL DEFAULT '0' COMMENT '当前回合、局、关卡中,标记轮到谁进行游戏操作',
-  `ip` varchar(16) DEFAULT '127.0.0.1' COMMENT '当前房间所在服务器ip地址',
+  `nexts` int(11) NOT NULL DEFAULT '0' COMMENT '当前回合、局、关卡中,标记轮到谁进行游戏操作',
+
+  `host` varchar(16) DEFAULT '127.0.0.1' COMMENT '当前房间所在服务器ip地址',
   `port` int(11) NOT NULL DEFAULT '0' COMMENT '当前房间所在游戏服务器端口',
-  PRIMARY KEY (`uuid`)
+  PRIMARY KEY (`uuid`),
+  UNIQUE KEY `roomId_UNIQUE` (`roomId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='游戏房间表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 

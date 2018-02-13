@@ -39,21 +39,21 @@ Router.get('/clientInfo', function (req, res) {
 });
 
 Router.get('/userPublicInfo', function (req, res) {
-    let userid = req.query.userid;
+    let userId = req.query.userId;
     let checksum = req.query.checksum;
-    if (checksum !== Crypto.calcSum(userid)) {
+    if (checksum !== Crypto.calcSum(userId)) {
         new HttpResponser().fill(ErrorCode.APICheckSumFailed, {'message': 'check sum failed'}).send(res);
         return;
     }
 
-    UserModel.userPubInfo(userid, function (err, data) {
+    UserModel.userPubInfo(userId, function (err, data) {
         if (err) {
             new HttpResponser().fill(ErrorCode.DatabaseNoRecord, {'message': 'db error or no record'}).send(res);
             return;
         }
 
         let userInfo = {
-            userid: userid,
+            userId: userId,
             name: data.nickname,
             sex: data.gender,
             headimgurl: data.headimg || ''
@@ -63,21 +63,21 @@ Router.get('/userPublicInfo', function (req, res) {
 });
 
 Router.get('/userPrivateInfo', function (req, res) {
-    let userid = req.query.userid;
+    let userId = req.query.userId;
     let checksum = req.query.checksum;
-    if (checksum !== Crypto.calcSum(userid)) {
+    if (checksum !== Crypto.calcSum(userId)) {
         new HttpResponser().fill(ErrorCode.APICheckSumFailed, {'message': 'check sum failed'}).send(res);
         return;
     }
 
-    UserModel.userPriInfo(userid, function (err, data) {
+    UserModel.userPriInfo(userId, function (err, data) {
         if (err) {
             new HttpResponser().fill(ErrorCode.DatabaseNoRecord, {'message': 'db error or no record'}).send(res);
             return;
         }
 
         let userInfo = {
-            userid: userid,
+            userId: userId,
             lv: data.lv,
             exp: data.exp,
             coins: data.coins,
@@ -88,17 +88,17 @@ Router.get('/userPrivateInfo', function (req, res) {
 });
 
 Router.post('/addUserRes', function (req, res) {
-    let userid = req.body.userid;
+    let userId = req.body.userId;
     let type = req.body.type;
     let amount = req.body.amount;
     let checksum = req.body.checksum;
-    if (checksum !== Crypto.calcSum(userid, type, amount)) {
+    if (checksum !== Crypto.calcSum(userId, type, amount)) {
         new HttpResponser().fill(ErrorCode.APICheckSumFailed, {'message': 'check sum failed'}).send(res);
         return;
     }
 
     amount = parseInt(amount, 10);
-    if (!userid || !type || !amount || Number.isNaN(amount) || amount < 0) {
+    if (!userId || !type || !amount || Number.isNaN(amount) || amount < 0) {
         new HttpResponser().fill(ErrorCode.InvalidParams, {"message": "invalid params"}).send(res);
         return;
     }
@@ -109,14 +109,14 @@ Router.post('/addUserRes', function (req, res) {
             new HttpResponser().fill(ErrorCode.UpdateDBFailed, {"message": "write db failed"}).send(res);
             return;
         }
-        UserModel.userPriInfo(userid, function (err, data) {
+        UserModel.userPriInfo(userId, function (err, data) {
             if (err) {
                 new HttpResponser().fill(ErrorCode.DatabaseNoRecord, {'message': 'db error or no record'}).send(res);
                 return;
             }
 
             let userInfo = {
-                userid: userid,
+                userId: userId,
                 lv: data.lv,
                 exp: data.exp,
                 coins: data.coins,
@@ -132,16 +132,16 @@ Router.post('/addUserRes', function (req, res) {
 
     switch (type) {
         case "gems":
-            UserModel.addGems(userid, amount, cb);
+            UserModel.addGems(userId, amount, cb);
             break;
         case "coins":
-            UserModel.addCoins(userid, amount, cb);
+            UserModel.addCoins(userId, amount, cb);
             break;
         case "lv":
-            UserModel.addLv(userid, amount, cb);
+            UserModel.addLv(userId, amount, cb);
             break;
         case "exp":
-            UserModel.addExp(userid, amount, cb);
+            UserModel.addExp(userId, amount, cb);
             break;
         default:
             Logger.error('Add User Res Failed, type [ %s ] params [ %j ] [ %j ]', type, req.body, req.query);
@@ -151,17 +151,17 @@ Router.post('/addUserRes', function (req, res) {
 });
 
 Router.post('/costUserRes', function (req, res) {
-    let userid = req.body.userid;
+    let userId = req.body.userId;
     let type = req.body.type;
     let amount = req.body.amount;
     let checksum = req.body.checksum;
-    if (checksum !== Crypto.calcSum(userid, type, amount)) {
+    if (checksum !== Crypto.calcSum(userId, type, amount)) {
         new HttpResponser().fill(ErrorCode.APICheckSumFailed, {'message': 'check sum failed'}).send(res);
         return;
     }
 
     amount = parseInt(amount, 10);
-    if (!userid || !type || !amount || Number.isNaN(amount) || amount < 0) {
+    if (!userId || !type || !amount || Number.isNaN(amount) || amount < 0) {
         new HttpResponser().fill(ErrorCode.InvalidParams, {"message": "invalid params"}).send(res);
         return;
     }
@@ -172,14 +172,14 @@ Router.post('/costUserRes', function (req, res) {
             new HttpResponser().fill(ErrorCode.UpdateDBFailed, {"message": "write db failed"}).send(res);
             return;
         }
-        UserModel.userPriInfo(userid, function (err, data) {
+        UserModel.userPriInfo(userId, function (err, data) {
             if (err) {
                 new HttpResponser().fill(ErrorCode.DatabaseNoRecord, {'message': 'db error or no record'}).send(res);
                 return;
             }
 
             let userInfo = {
-                userid: userid,
+                userId: userId,
                 lv: data.lv,
                 exp: data.exp,
                 coins: data.coins,
@@ -195,10 +195,10 @@ Router.post('/costUserRes', function (req, res) {
 
     switch (type) {
         case "gems":
-            UserModel.costGems(userid, amount, cb);
+            UserModel.costGems(userId, amount, cb);
             break;
         case "coins":
-            UserModel.costCoins(userid, amount, cb);
+            UserModel.costCoins(userId, amount, cb);
             break;
         default:
             Logger.error('Add User Res Failed, type [ %s ] params [ %j ] [ %j ]', type, req.body, req.query);

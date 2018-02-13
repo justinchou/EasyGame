@@ -32,9 +32,9 @@ let UserModel = require('../../zutils/model/user.model');
 function createUser(account, type, password, name, sex, headimgurl, next) {
     let parmas = [account, type, password, name, sex, headimgurl];
 
-    let retid;
+    let retId;
 
-    AccountModel.existAccount(account, type, function (err, exist, userid) {
+    AccountModel.existAccount(account, type, function (err, exist, userId) {
         if (err) {
             next(err);
             Logger.error('Check Account Exist Error: params [ %j ] err ', parmas, err);
@@ -49,56 +49,56 @@ function createUser(account, type, password, name, sex, headimgurl, next) {
                     return;
                 }
 
-                UserModel.createUser(name, sex, headimgurl, (err, userid) => {
-                    if (err || typeof userid !== 'number') {
-                        next(err || new Error('Create User Got Invalid Userid'));
-                        Logger.error('Create User Got Invalid Userid: params [ %j ] err ', parmas, err);
+                UserModel.createUser(name, sex, headimgurl, (err, userId) => {
+                    if (err || typeof userId !== 'number') {
+                        next(err || new Error('Create User Got Invalid UserId'));
+                        Logger.error('Create User Got Invalid UserId: params [ %j ] err ', parmas, err);
                         return;
                     }
 
-                    retid = userid;
-                    AccountModel.linkUserId(account, type, userid, (err, success) => {
+                    retId = userId;
+                    AccountModel.linkUserId(account, type, userId, (err, success) => {
                         if (err || !success) {
                             next(err || new Error('Link Created User To Account Failed'));
                             Logger.error('Link Created User To Account Failed: params [ %j ] err ', parmas, err);
                             return;
                         }
 
-                        next(null, retid);
+                        next(null, retId);
                         LogStat.info('Create Account And User: Account [ %s ] Name [ %s ] Sex [ %s ] Img [ %s ]', account, name, sex, headimgurl);
                     });
                 });
             });
-        } else if (exist && !userid) {
-            UserModel.createUser(name, sex, headimgurl, (err, userid) => {
-                if (err || typeof userid !== 'number') {
-                    next(err || new Error('Create User Got Invalid Userid'));
-                    Logger.error('Create User Got Invalid Userid: params [ %j ] err ', parmas, err);
+        } else if (exist && !userId) {
+            UserModel.createUser(name, sex, headimgurl, (err, userId) => {
+                if (err || typeof userId !== 'number') {
+                    next(err || new Error('Create User Got Invalid UserId'));
+                    Logger.error('Create User Got Invalid UserId: params [ %j ] err ', parmas, err);
                     return;
                 }
 
-                retid = userid;
-                AccountModel.linkUserId(account, type, userid, (err, success) => {
+                retId = userId;
+                AccountModel.linkUserId(account, type, userId, (err, success) => {
                     if (err || !success) {
                         next(err || new Error('Link Created User To Account Failed'));
                         Logger.error('Link Created User To Account Failed: params [ %j ] err ', parmas, err);
                         return;
                     }
 
-                    next(null, retid);
+                    next(null, retId);
                     LogStat.info('Create User, Account Exist: Account [ %s ] Name [ %s ] Sex [ %s ] Img [ %s ]', account, name, sex, headimgurl);
                 });
             });
         } else {
-            retid = userid;
-            UserModel.updateUser(userid, nickname, sex, headimgurl, function (err, success) {
+            retId = userId;
+            UserModel.updateUser(userId, nickname, sex, headimgurl, function (err, success) {
                 if (err || !success) {
                     next(err || new Error('Update User Info Failed'));
                     Logger.error('Update User Info Failed: params [ %j ] err ', parmas, err);
                     return;
                 }
 
-                next(null, retid);
+                next(null, retId);
                 LogStat.info('Update User, Account And User Both Exist: Account [ %s ] Name [ %s ] Sex [ %s ] Img [ %s ]', account, name, sex, headimgurl);
             });
         }
@@ -118,11 +118,11 @@ Router.get('/register', function (req, res) {
         return;
     }
 
-    createUser(account, type, password, name, sex, headimgurl, (err, userid) => {
-        if (err || !userid) {
+    createUser(account, type, password, name, sex, headimgurl, (err, userId) => {
+        if (err || !userId) {
             new HttpResponser().fill(ErrorCode.AccountRegistered, {'message': 'account been used'}).send(res);
         } else {
-            new HttpResponser().fill(ErrorCode.Success, {"userid": userid}).send(res);
+            new HttpResponser().fill(ErrorCode.Success, {"userId": userId}).send(res);
         }
     });
 });
@@ -147,7 +147,7 @@ Router.get('/guestAuth', function (req, res) {
         let sign = Crypto.calcSign(account, req.ip);
         let auth = {
             account: account,
-            userid: data.userid,
+            userId: data.userId,
             hallServer: ConfigHall.host + ':' + ConfigHall.port,
             sign: sign
         };
@@ -179,7 +179,7 @@ Router.get('/emailAuth', function (req, res) {
         let sign = Crypto.calcSign(account, req.ip);
         let auth = {
             account: account,
-            userid: data.userid,
+            userId: data.userId,
             hallServer: Crypto.calcServerAddr(ConfigHall.host, ConfigHall.port),
             sign: sign
         };
@@ -216,8 +216,8 @@ Router.get('/wechatAuth', function (req, res) {
         }
 
         let accessToken = data.access_token;
-        let openid = data.openid;
-        WeChatAPI.getStateInfo(accessToken, openid, function (err, data) {
+        let openId = data.openid;
+        WeChatAPI.getStateInfo(accessToken, openId, function (err, data) {
             if (err) {
                 new HttpResponser().fill(ErrorCode.WeChatAPIError, {"message": "load wechat stateInfo failed"}).send(res);
                 Logger.error('Load Wechat StateInfo Failed: params [ %j ] err ', req.query, err);
@@ -234,17 +234,17 @@ Router.get('/wechatAuth', function (req, res) {
             let nickname = data.nickname;
             let sex = data.sex;
             let headimgurl = data.headimgurl;
-            createUser(account, type, "", nickname, sex, headimgurl, function (err, userid) {
-                if (err || !userid) {
+            createUser(account, type, "", nickname, sex, headimgurl, function (err, userId) {
+                if (err || !userId) {
                     new HttpResponser().fill(ErrorCode.WeChatAPIError, {"message": "create wechat user info failed"}).send(res);
-                    Logger.error('Create Wechat Userinfo Failed: params [ %j ] err ', req.query, err);
+                    Logger.error('Create Wechat UserInfo Failed: params [ %j ] err ', req.query, err);
                     return;
                 }
 
                 let sign = Crypto.calcSign(account, req.ip);
                 let auth = {
                     account: account,
-                    userid: userid,
+                    userId: userId,
                     hallServer: Crypto.calcServerAddr(ConfigHall.host, ConfigHall.port),
                     sign: sign
                 };

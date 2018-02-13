@@ -116,7 +116,7 @@ function existAccount(account, type, next) {
         if (err) {
             next(err, true);
         } else if (rows && rows.length > 0) {
-            next(null, true, rows[0].userid);
+            next(null, true, rows[0].userId);
         } else {
             next(null, false);
         }
@@ -240,30 +240,30 @@ function updatePassword(account, type, password, next) {
  * Link UserId Onto Account
  * @param {String} account
  * @param {String} type
- * @param {Number} userid
+ * @param {String} userId
  * @param {Boolean|Function} force true:当用户已绑定账号仍然强制绑定, false:仅当用户从未绑定账号时绑定
  * @param {Function=} next (ERROR, Boolean)
  */
-function linkUserId(account, type, userid, force, next) {
+function linkUserId(account, type, userId, force, next) {
     if (arguments.length === 4) {
         next = force;
         force = false;
     }
 
-    if (!account || !userid || typeof account !== 'string' || ["number","string"].indexOf(typeof userid) === -1) {
+    if (!account || !userId || typeof account !== 'string' || ["number","string"].indexOf(typeof userId) === -1) {
         next(new Error('Invalid Params'));
         Logger.error('create account params [ %j ]', arguments);
         return;
     }
 
-    let sql = 'UPDATE `account` SET `userid` = ? WHERE `account` = ?';
-    let list = [userid, account];
+    let sql = 'UPDATE `account` SET `userId` = ? WHERE `account` = ?';
+    let list = [userId, account];
     if (type) {
         sql += ' AND `type` = ?';
         list.push(type);
     }
     if (!force) {
-        sql += ' AND `userid` = ?';
+        sql += ' AND `userId` = ?';
         list.push(0);
     }
     sql = MySQL.format(sql, list);

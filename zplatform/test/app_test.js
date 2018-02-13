@@ -28,17 +28,17 @@ const ErrorCode = require('../config/errorCode');
 
 describe('App', () => {
 
-    let userid = '23432545';
+    let userId = '23432545';
     let password = 'lvgetech';
     let nickname = '老王家的二狗蛋';
     let gender = 1;
     let headimg = 'http://laowangjia.com/ergoudan.jpg';
 
     let guestAccount = '' + (Math.floor(Math.random() * 10000000) + 1);
-    let guestUserid = '';
+    let guestUserId = '';
 
     let emailAccount = '' + (Math.floor(Math.random() * 10000000) + 1) + '@lvge.tech';
-    let emailUserid = '';
+    let emailUserId = '';
 
     let amount = 10;
 
@@ -108,7 +108,7 @@ describe('App', () => {
         });
 
         it('获取用户公开信息 #无checksum', done => {
-            let api = '/resources/userPublicInfo?' + QS.stringify({userid: userid});
+            let api = '/resources/userPublicInfo?' + QS.stringify({userId: userId});
             app.get(api).expect(200).end((err, res) => {
                 if (err) {
                     Logger.error('Request API %s Failed, err: ', api, err);
@@ -123,7 +123,7 @@ describe('App', () => {
         });
 
         it('获取用户私密信息 #无checksum', done => {
-            let api = '/resources/userPrivateInfo?' + QS.stringify({userid: userid});
+            let api = '/resources/userPrivateInfo?' + QS.stringify({userId: userId});
             app.get(api).expect(200).end((err, res) => {
                 if (err) {
                     Logger.error('Request API %s Failed, err: ', api, err);
@@ -139,8 +139,8 @@ describe('App', () => {
 
         it('获取用户公开信息 #无对应用户', done => {
             let api = '/resources/userPublicInfo?' + QS.stringify({
-                userid: userid,
-                checksum: Crypto.calcSum(userid)
+                userId: userId,
+                checksum: Crypto.calcSum(userId)
             });
             app.get(api).expect(200).end((err, res) => {
                 if (err) {
@@ -157,8 +157,8 @@ describe('App', () => {
 
         it('获取用户私密信息 #无对应用户', done => {
             let api = '/resources/userPrivateInfo?' + QS.stringify({
-                userid: userid,
-                checksum: Crypto.calcSum(userid)
+                userId: userId,
+                checksum: Crypto.calcSum(userId)
             });
             app.get(api).expect(200).end((err, res) => {
                 if (err) {
@@ -214,8 +214,8 @@ describe('App', () => {
 
                 let msg = res.body.message;
                 Should.not.equal(msg, undefined);
-                Should.exist(msg.userid);
-                guestUserid = msg.userid;
+                Should.exist(msg.userId);
+                guestUserId = msg.userId;
                 done();
             });
         });
@@ -239,15 +239,15 @@ describe('App', () => {
 
                 let msg = res.body.message;
                 Should.not.equal(msg, undefined);
-                Should.exist(msg.userid);
-                emailUserid = msg.userid;
+                Should.exist(msg.userId);
+                emailUserId = msg.userId;
                 done();
             });
         });
 
         it('获取用户公开信息 #有对应用户', done => {
             let api = '/resources/userPublicInfo?' + QS.stringify({
-                userid: emailUserid,
+                userId: emailUserId,
                 checksum: Crypto.calcSum(emailUserid)
             });
             app.get(api).expect(200).end((err, res) => {
@@ -259,7 +259,7 @@ describe('App', () => {
 
                 let msg = res.body.message;
                 Should.not.equal(msg, undefined);
-                Should.equal(msg.userInfo.userid, "" + emailUserid);
+                Should.equal(msg.userInfo.userId, "" + emailUserId);
                 Should.equal(msg.userInfo.name, nickname);
                 Should.equal(msg.userInfo.sex, gender);
                 Should.equal(msg.userInfo.headimgurl, headimg);
@@ -269,7 +269,7 @@ describe('App', () => {
 
         it('获取用户私密信息 #有对应用户', done => {
             let api = '/resources/userPrivateInfo?' + QS.stringify({
-                userid: guestUserid,
+                userId: guestUserId,
                 checksum: Crypto.calcSum(guestUserid)
             });
             app.get(api).expect(200).end((err, res) => {
@@ -281,7 +281,7 @@ describe('App', () => {
 
                 let msg = res.body.message;
                 Should.not.equal(msg, undefined);
-                Should.equal(msg.userInfo.userid, "" + guestUserid);
+                Should.equal(msg.userInfo.userId, "" + guestUserId);
                 Should.equal(msg.userInfo.lv, ConfigPlatform.userInitInfo.lv);
                 Should.equal(msg.userInfo.exp, ConfigPlatform.userInitInfo.exp);
                 Should.equal(msg.userInfo.coins, ConfigPlatform.userInitInfo.coins);
@@ -306,7 +306,7 @@ describe('App', () => {
                 let msg = res.body.message;
                 Should.not.equal(msg, undefined);
                 Should.equal(msg.auth.account, guestAccount);
-                Should.equal(msg.auth.userid, guestUserid);
+                Should.equal(msg.auth.userId, guestUserId);
                 Should.exist(msg.auth.hallServer);
                 Should.exist(msg.auth.sign);
 
@@ -329,7 +329,7 @@ describe('App', () => {
                 let msg = res.body.message;
                 Should.not.equal(msg, undefined);
                 Should.equal(msg.auth.account, emailAccount);
-                Should.equal(msg.auth.userid, emailUserid);
+                Should.equal(msg.auth.userId, emailUserId);
                 Should.exist(msg.auth.hallServer);
                 Should.exist(msg.auth.sign);
 
@@ -352,7 +352,7 @@ describe('App', () => {
                 let msg = res.body.message;
                 Should.not.equal(msg, undefined);
                 Should.equal(msg.auth.account, emailAccount);
-                Should.equal(msg.auth.userid, "" + emailUserid);
+                Should.equal(msg.auth.userId, "" + emailUserId);
                 Should.exist(msg.auth.hallServer);
                 Should.exist(msg.auth.sign);
 
@@ -366,7 +366,7 @@ describe('App', () => {
             let api = '/resources/addUserRes';
             let type = 'coins';
             app.post(api).send({
-                userid: emailUserid,
+                userId: emailUserId,
                 type: type,
                 amount: amount,
                 checksum: Crypto.calcSum(emailUserid, type, amount)
@@ -379,7 +379,7 @@ describe('App', () => {
 
                 let msg = res.body.message;
                 Should.not.equal(msg, undefined);
-                Should.equal(msg.userInfo.userid, emailUserid);
+                Should.equal(msg.userInfo.userId, emailUserId);
                 Should.equal(msg.userInfo.lv, ConfigPlatform.userInitInfo.lv);
                 Should.equal(msg.userInfo.exp, ConfigPlatform.userInitInfo.exp);
                 Should.equal(msg.userInfo.coins, ConfigPlatform.userInitInfo.coins + 10);
@@ -394,7 +394,7 @@ describe('App', () => {
             let api = '/resources/costUserRes';
             let type = 'coins';
             app.post(api).send({
-                userid: emailUserid,
+                userId: emailUserId,
                 type: type,
                 amount: amount,
                 checksum: Crypto.calcSum(emailUserid, type, amount)
@@ -407,7 +407,7 @@ describe('App', () => {
 
                 let msg = res.body.message;
                 Should.not.equal(msg, undefined);
-                Should.equal(msg.userInfo.userid, emailUserid);
+                Should.equal(msg.userInfo.userId, emailUserId);
                 Should.equal(msg.userInfo.lv, ConfigPlatform.userInitInfo.lv);
                 Should.equal(msg.userInfo.exp, ConfigPlatform.userInitInfo.exp);
                 Should.equal(msg.userInfo.coins, ConfigPlatform.userInitInfo.coins);
@@ -423,7 +423,7 @@ describe('App', () => {
             let api = '/resources/addUserRes';
             let type = 'gems';
             app.post(api).send({
-                userid: emailUserid,
+                userId: emailUserId,
                 type: type,
                 amount: amount,
                 checksum: Crypto.calcSum(emailUserid, type, amount)
@@ -436,7 +436,7 @@ describe('App', () => {
 
                 let msg = res.body.message;
                 Should.not.equal(msg, undefined);
-                Should.equal(msg.userInfo.userid, emailUserid);
+                Should.equal(msg.userInfo.userId, emailUserId);
                 Should.equal(msg.userInfo.lv, ConfigPlatform.userInitInfo.lv);
                 Should.equal(msg.userInfo.exp, ConfigPlatform.userInitInfo.exp);
                 Should.equal(msg.userInfo.coins, ConfigPlatform.userInitInfo.coins);
@@ -451,7 +451,7 @@ describe('App', () => {
             let api = '/resources/costUserRes';
             let type = 'gems';
             app.post(api).send({
-                userid: emailUserid,
+                userId: emailUserId,
                 type: type,
                 amount: amount,
                 checksum: Crypto.calcSum(emailUserid, type, amount)
@@ -464,7 +464,7 @@ describe('App', () => {
 
                 let msg = res.body.message;
                 Should.not.equal(msg, undefined);
-                Should.equal(msg.userInfo.userid, emailUserid);
+                Should.equal(msg.userInfo.userId, emailUserId);
                 Should.equal(msg.userInfo.lv, ConfigPlatform.userInitInfo.lv);
                 Should.equal(msg.userInfo.exp, ConfigPlatform.userInitInfo.exp);
                 Should.equal(msg.userInfo.coins, ConfigPlatform.userInitInfo.coins);
@@ -480,7 +480,7 @@ describe('App', () => {
             let api = '/resources/addUserRes';
             let type = 'lv';
             app.post(api).send({
-                userid: guestUserid,
+                userId: guestUserId,
                 type: type,
                 amount: amount,
                 checksum: Crypto.calcSum(guestUserid, type, amount)
@@ -493,7 +493,7 @@ describe('App', () => {
 
                 let msg = res.body.message;
                 Should.not.equal(msg, undefined);
-                Should.equal(msg.userInfo.userid, guestUserid);
+                Should.equal(msg.userInfo.userId, guestUserId);
                 Should.equal(msg.userInfo.lv, ConfigPlatform.userInitInfo.lv + 10);
                 Should.equal(msg.userInfo.exp, ConfigPlatform.userInitInfo.exp);
                 Should.equal(msg.userInfo.coins, ConfigPlatform.userInitInfo.coins);
@@ -508,7 +508,7 @@ describe('App', () => {
             let api = '/resources/addUserRes';
             let type = 'exp';
             app.post(api).send({
-                userid: guestUserid,
+                userId: guestUserId,
                 type: type,
                 amount: amount,
                 checksum: Crypto.calcSum(guestUserid, type, amount)
@@ -521,7 +521,7 @@ describe('App', () => {
 
                 let msg = res.body.message;
                 Should.not.equal(msg, undefined);
-                Should.equal(msg.userInfo.userid, guestUserid);
+                Should.equal(msg.userInfo.userId, guestUserId);
                 Should.equal(msg.userInfo.lv, ConfigPlatform.userInitInfo.lv + 10);
                 Should.equal(msg.userInfo.exp, ConfigPlatform.userInitInfo.exp + 10);
                 Should.equal(msg.userInfo.coins, ConfigPlatform.userInitInfo.coins);
@@ -537,7 +537,7 @@ describe('App', () => {
             let api = '/resources/addUserRes';
             let type = 'exp';
             app.post(api).send({
-                userid: emailUserid,
+                userId: emailUserId,
                 type: type,
                 amount: amount,
                 checksum: Crypto.calcSum(emailUserid, type, amount, 123)
@@ -559,7 +559,7 @@ describe('App', () => {
             let api = '/resources/costUserRes';
             let type = 'exp';
             app.post(api).send({
-                userid: emailUserid,
+                userId: emailUserId,
                 type: type,
                 amount: amount,
                 checksum: Crypto.calcSum(emailUserid, type, amount, 123)
@@ -581,7 +581,7 @@ describe('App', () => {
             let api = '/resources/addUserRes';
             let type = 'lalala';
             app.post(api).send({
-                userid: guestUserid,
+                userId: guestUserId,
                 type: type,
                 amount: amount,
                 checksum: Crypto.calcSum(guestUserid, type, amount)
@@ -603,7 +603,7 @@ describe('App', () => {
             let api = '/resources/costUserRes';
             let type = 'lv';
             app.post(api).send({
-                userid: guestUserid,
+                userId: guestUserId,
                 type: type,
                 amount: amount,
                 checksum: Crypto.calcSum(guestUserid, type, amount)
@@ -625,7 +625,7 @@ describe('App', () => {
             let api = '/resources/addUserRes';
             let type = 'lalala';
             app.post(api).send({
-                userid: guestUserid,
+                userId: guestUserId,
                 type: type,
                 amount: -amount,
                 checksum: Crypto.calcSum(guestUserid, type, -amount)
@@ -647,7 +647,7 @@ describe('App', () => {
             let api = '/resources/costUserRes';
             let type = 'gems';
             app.post(api).send({
-                userid: guestUserid,
+                userId: guestUserId,
                 type: type,
                 amount: -amount,
                 checksum: Crypto.calcSum(guestUserid, type, -amount)

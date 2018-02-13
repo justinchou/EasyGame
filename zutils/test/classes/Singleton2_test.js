@@ -10,11 +10,11 @@
 
 let Singleton = require('../../classes/Singleton').getInstance();
 
-let gameinfo = [
+let gameInfo = [
     {"name": "demo", "host": "127.0.0.1", "port": 3001},
     {"name": "xiaoxiaole", "host": "127.0.0.1", "port": 3002},
     {"name": "tanchishe", "host": "127.0.0.1", "port": 3003},
 ];
-Singleton.set('games', gameinfo);
+Singleton.set('games', gameInfo);
 
-module.exports = {"gameinfo": gameinfo};
+module.exports = {"gameInfo": gameInfo};

@@ -23,12 +23,13 @@ DROP TABLE IF EXISTS `user_game`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user_game` (
-  `userid` int(11) NOT NULL DEFAULT '0',
+  `userId` int(11) NOT NULL DEFAULT '0',
   `gameid` int(11) NOT NULL DEFAULT '0',
   `room_uuid` varchar(32) NOT NULL DEFAULT '',
   `create_time` int(11) NOT NULL DEFAULT '0',
-  `history` varchar(256) NOT NULL DEFAULT ''
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户-游戏popstar关联表';
+  `history` varchar(256) NOT NULL DEFAULT '',
+  PRIMARY KEY (`userId`,`gameid`,`room_uuid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户-游戏关联表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

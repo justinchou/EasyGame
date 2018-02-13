@@ -92,17 +92,17 @@ function destory() {
 
 /**
  * Check If User Exist
- * @param {String} userid
+ * @param {String} userId
  * @param {Function} next (ERROR, Boolean)
  */
-function existUser(userid, next) {
-    if (!userid) {
+function existUser(userId, next) {
+    if (!userId) {
         next(new Error('Invalid Params'));
-        Logger.error('get exist userid params [ %j ]', arguments);
+        Logger.error('get exist userId params [ %j ]', arguments);
         return;
     }
 
-    let sql = MySQL.format('SELECT userid FROM `user` WHERE userid = ?', [userid]);
+    let sql = MySQL.format('SELECT userId FROM `user` WHERE userId = ?', [userId]);
     query(sql, (err, rows) => {
         if (err) {
             next(null, true);
@@ -117,26 +117,26 @@ function existUser(userid, next) {
 
 /**
  * Load User Info
- * @param {Number} userid
+ * @param {String} userId
  * @param {Function} next (ERROR, UserInfo)
  */
-function userInfo(userid, next) {
-    if (!userid) {
+function userInfo(userId, next) {
+    if (!userId) {
         next(new Error('Invalid Params'));
-        Logger.error('get exist userid params [ %j ]', arguments);
+        Logger.error('get exist userId params [ %j ]', arguments);
         return;
     }
 
     let sql = MySQL.format(
-        'SELECT `userid`,`nickname`,`lv`,`exp`,`coins`,`gems`,`gender`,`headimg` FROM `user` WHERE `userid` = ? LIMIT 1',
-        [userid]
+        'SELECT `userId`,`nickname`,`lv`,`exp`,`coins`,`gems`,`gender`,`headimg` FROM `user` WHERE `userId` = ? LIMIT 1',
+        [userId]
     );
     query(sql, function (err, rows) {
         if (err) {
             next(err);
             throw err;
         } else if (!rows || rows.length === 0) {
-            next(new Error('No User ' + userid));
+            next(new Error('No User ' + userId));
             return;
         }
 
@@ -147,16 +147,16 @@ function userInfo(userid, next) {
 
 /**
  * User Base Info - Public Info
- * @param {Number} userid
+ * @param {String} userId
  * @param {Function} next (ERROR, BaseUserInfo)
  */
-function userPubInfo(userid, next) {
-    userInfo(userid, (err, info) => {
+function userPubInfo(userId, next) {
+    userInfo(userId, (err, info) => {
         if (err) {
             next(err);
         } else {
             next(null, {
-                "userid": userid,
+                "userId": userId,
                 "nickname": info.nickname,
                 "gender": info.gender,
                 "headimg": info.headimg
@@ -167,16 +167,16 @@ function userPubInfo(userid, next) {
 
 /**
  * Get Gem
- * @param {Number} userid
+ * @param {String} userId
  * @param {Function} next (ERROR, BaseUserInfo)
  */
-function userPriInfo(userid, next) {
-    userInfo(userid, (err, info) => {
+function userPriInfo(userId, next) {
+    userInfo(userId, (err, info) => {
         if (err) {
             next(err);
         } else {
             next(null, {
-                "userid": userid,
+                "userId": userId,
                 "lv": info.lv,
                 "exp": info.exp,
                 "coins": info.coins,
@@ -217,21 +217,21 @@ function createUser(nickname, gender, headimg, next) {
 
 /**
  * Update User Info
- * @param {Number} userid
+ * @param {String} userId
  * @param {String} nickname
  * @param {Number} gender  0: male, 1: female, 2: other
  * @param {String|Function} headimg
  * @param {Function=} next (ERROR, Boolean)
  */
-function updateUser(userid, nickname, gender, headimg, next) {
+function updateUser(userId, nickname, gender, headimg, next) {
     if (arguments.length === 4) {
         next = headimg;
         headimg = '';
     }
 
-    if (!userid) {
+    if (!userId) {
         next(new Error('Invalid Params'));
-        Logger.error('get exist userid params [ %j ]', arguments);
+        Logger.error('get exist userId params [ %j ]', arguments);
         return;
     }
 
@@ -240,13 +240,13 @@ function updateUser(userid, nickname, gender, headimg, next) {
     let sql;
     if (!headimg) {
         sql = MySQL.format(
-            'UPDATE `user` SET `nickname` = ?, `gender` = ? WHERE `userid` = ?',
-            [nickname, gender, userid]
+            'UPDATE `user` SET `nickname` = ?, `gender` = ? WHERE `userId` = ?',
+            [nickname, gender, userId]
         );
     } else {
         sql = MySQL.format(
-            'UPDATE `user` SET `nickname` = ?, `gender` = ?, `headimg` = ? WHERE `userid` = ?',
-            [nickname, gender, headimg, userid]
+            'UPDATE `user` SET `nickname` = ?, `gender` = ?, `headimg` = ? WHERE `userId` = ?',
+            [nickname, gender, headimg, userId]
         );
     }
 
@@ -263,14 +263,14 @@ function updateUser(userid, nickname, gender, headimg, next) {
 
 /**
  * Add Gem
- * @param {Number} userid
+ * @param {String} userId
  * @param {Number} gems  must be positive
  * @param {Function} next (ERROR, Boolean)
  */
-function addGems(userid, gems, next) {
-    if (!userid) {
+function addGems(userId, gems, next) {
+    if (!userId) {
         next(new Error('Invalid Params'));
-        Logger.error('get exist userid params [ %j ]', arguments);
+        Logger.error('get exist userId params [ %j ]', arguments);
         return;
     }
 
@@ -278,7 +278,7 @@ function addGems(userid, gems, next) {
         Logger.warn('Add Gems But Gems Value Negative [ %s ]', gems);
     }
 
-    let sql = MySQL.format('UPDATE `user` SET `gems` = `gems` + ? WHERE `userid` = ?', [gems, userid]);
+    let sql = MySQL.format('UPDATE `user` SET `gems` = `gems` + ? WHERE `userId` = ?', [gems, userId]);
     query(sql, function (err, rows) {
         if (err) {
             next(err);
@@ -291,14 +291,14 @@ function addGems(userid, gems, next) {
 
 /**
  * Minus Gem
- * @param {Number} userid
+ * @param {String} userId
  * @param {Number} gems  must be positive
  * @param {Function} next (ERROR, Boolean)
  */
-function costGems(userid, gems, next) {
+function costGems(userId, gems, next) {
     if (gems < 0) gems = -gems;
 
-    let sql = MySQL.format('UPDATE `user` SET `gems` = `gems` - ? WHERE `userid` = ?', [gems, userid]);
+    let sql = MySQL.format('UPDATE `user` SET `gems` = `gems` - ? WHERE `userId` = ?', [gems, userId]);
     query(sql, function (err, rows) {
         if (err) {
             next(err);
@@ -311,14 +311,14 @@ function costGems(userid, gems, next) {
 
 /**
  * Add Coins
- * @param {Number} userid
+ * @param {String} userId
  * @param {Number} coins  must be positive
  * @param {Function} next (ERROR, Boolean)
  */
-function addCoins(userid, coins, next) {
-    if (!userid) {
+function addCoins(userId, coins, next) {
+    if (!userId) {
         next(new Error('Invalid Params'));
-        Logger.error('get exist userid params [ %j ]', arguments);
+        Logger.error('get exist userId params [ %j ]', arguments);
         return;
     }
 
@@ -326,7 +326,7 @@ function addCoins(userid, coins, next) {
         Logger.warn('Add Coins But Gems Value Negative [ %s ]', coins);
     }
 
-    let sql = MySQL.format('UPDATE `user` SET `coins` = `coins` + ? WHERE `userid` = ?', [coins, userid]);
+    let sql = MySQL.format('UPDATE `user` SET `coins` = `coins` + ? WHERE `userId` = ?', [coins, userId]);
     query(sql, function (err, rows) {
         if (err) {
             next(err);
@@ -339,14 +339,14 @@ function addCoins(userid, coins, next) {
 
 /**
  * Minus Gems
- * @param {Number} userid
+ * @param {String} userId
  * @param {Number} coins  must be positive
  * @param {Function} next (ERROR, Boolean)
  */
-function costCoins(userid, coins, next) {
+function costCoins(userId, coins, next) {
     if (coins < 0) coins = -coins;
 
-    let sql = MySQL.format('UPDATE `user` SET `coins` = `coins` - ? WHERE `userid` = ?', [coins, userid]);
+    let sql = MySQL.format('UPDATE `user` SET `coins` = `coins` - ? WHERE `userId` = ?', [coins, userId]);
     query(sql, function (err, rows) {
         if (err) {
             next(err);
@@ -359,14 +359,14 @@ function costCoins(userid, coins, next) {
 
 /**
  * Add Lv
- * @param {Number} userid
+ * @param {String} userId
  * @param {Number} lv  must be positive
  * @param {Function} next (ERROR, Boolean)
  */
-function addLv(userid, lv, next) {
-    if (!userid) {
+function addLv(userId, lv, next) {
+    if (!userId) {
         next(new Error('Invalid Params'));
-        Logger.error('get exist userid params [ %j ]', arguments);
+        Logger.error('get exist userId params [ %j ]', arguments);
         return;
     }
 
@@ -374,7 +374,7 @@ function addLv(userid, lv, next) {
         Logger.warn('Add Lv But Gems Value Negative [ %s ]', lv);
     }
 
-    let sql = MySQL.format('UPDATE `user` SET `lv` = `lv` + ? WHERE `userid` = ?', [lv, userid]);
+    let sql = MySQL.format('UPDATE `user` SET `lv` = `lv` + ? WHERE `userId` = ?', [lv, userId]);
     query(sql, function (err, rows) {
         if (err) {
             next(err);
@@ -387,14 +387,14 @@ function addLv(userid, lv, next) {
 
 /**
  * Add Exp
- * @param {Number} userid
+ * @param {String} userId
  * @param {Number} exp  must be positive
  * @param {Function} next (ERROR, Boolean)
  */
-function addExp(userid, exp, next) {
-    if (!userid) {
+function addExp(userId, exp, next) {
+    if (!userId) {
         next(new Error('Invalid Params'));
-        Logger.error('get exist userid params [ %j ]', arguments);
+        Logger.error('get exist userId params [ %j ]', arguments);
         return;
     }
 
@@ -402,7 +402,7 @@ function addExp(userid, exp, next) {
         Logger.warn('Add Gems But Gems Value Negative [ %s ]', exp);
     }
 
-    let sql = MySQL.format('UPDATE `user` SET `exp` = `exp` + ? WHERE `userid` = ?', [exp, userid]);
+    let sql = MySQL.format('UPDATE `user` SET `exp` = `exp` + ? WHERE `userId` = ?', [exp, userId]);
     query(sql, function (err, rows) {
         if (err) {
             next(err);
