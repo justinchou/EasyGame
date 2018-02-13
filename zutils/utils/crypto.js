@@ -14,6 +14,7 @@
 //导入模块
 const Crypto = require('crypto');
 const Util = require('util');
+const UUID = require('uuid');
 
 /**
  * aes192加密模块
@@ -109,6 +110,14 @@ function fromBase64(str) {
 
 const ConfigUtils = require('../../config/utils');
 
+/**
+ * 由服务器签发给客户端, 用于在服务器其他接口校验数据可信度的字符串
+ *
+ * eg: sign由platform的auth接口发送给客户端, 客户端留存,
+ * 向hall登录时无需使用密码, 直接在hall校验platform发给客户端的sign的合法性, 证明是否成功登录授权
+ *
+ * @returns {string}
+ */
 function calcSign() {
     let args = [];
     for (let i = 0; i < arguments.length; i++) {
@@ -119,6 +128,13 @@ function calcSign() {
     return md5(str);
 }
 
+/**
+ * 由客户端签发, 服务器使用相同的参数和秘钥, 校验客户端的请求是否合法
+ *
+ * 一般情况, 所有敏感/私有数据的请求, 均需要使用校验.
+ *
+ * @returns {string}
+ */
 function calcSum() {
     let args = [];
     for (let i = 0; i < arguments.length; i++) {
@@ -129,6 +145,13 @@ function calcSum() {
     return md5(str);
 }
 
+/**
+ * 服务器间通信用的校验码, 由发起请求服务器生成, 接收请求服务器校验, 相同参数和算法独立运算
+ *
+ * 一般情况, 所有服务器间的通信都需要使用校验.
+ *
+ * @returns {string}
+ */
 function calcServer() {
     let args = [];
     for (let i = 0; i < arguments.length; i++) {
@@ -139,8 +162,23 @@ function calcServer() {
     return md5(str);
 }
 
+/**
+ * 拼接服务器的地址
+ *
+ * @param {String} host
+ * @param {Number} port
+ * @returns {String}
+ */
 function calcServerAddr(host, port) {
     return Util.format("%s:%s", host, port);
+}
+
+/**
+ * 生成随机UUID, 并且去除中间的 - 间隔字符
+ * @returns {string|*|void}
+ */
+function calcUUID() {
+    return UUID.v4().replace(/-/g, '');
 }
 
 module.exports = {
@@ -155,5 +193,6 @@ module.exports = {
     "calcSign": calcSign,
     "calcSum": calcSum,
     "calcServer": calcServer,
-    "calcServerAddr": calcServerAddr
+    "calcServerAddr": calcServerAddr,
+    "calcUUID": calcUUID
 };
