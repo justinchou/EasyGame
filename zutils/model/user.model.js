@@ -8,7 +8,6 @@
 
 'use strict';
 
-
 const MySQL = require("mysql");
 const Logger = require("log4js").getLogger("sql");
 const Crypto = require('../utils/crypto');
@@ -31,6 +30,18 @@ let pool = null;
 function init() {
     pool = MySQL.createPool(ConfigMySQL);
     Logger.warn("Pool Created");
+    pool.on('acquire', function (connection) {
+        // console.log('Connection %d acquired', connection.threadId);
+    });
+    pool.on('connection', function (connection) {
+        // console.log('Connection %d connected', connection.threadId);
+    });
+    pool.on('enqueue', function () {
+        // console.log('Waiting for available connection slot');
+    });
+    pool.on('release', function (connection) {
+        // console.log('Connection %d released', connection.threadId);
+    });
 }
 
 /**
@@ -38,6 +49,10 @@ function init() {
  * @param {Function} next (ERROR, Connection Object)
  */
 function getConnection(next) {
+    if (!pool || pool._closed) {
+        init();
+    }
+
     pool.getConnection(function (err, conn) {
         if (err) {
             Logger.error('Get Connection Failed', err);
@@ -66,6 +81,10 @@ function returnConnection(conn) {
  */
 function query(sql, next) {
     getConnection((err, conn) => {
+        if (err) {
+            Logger.error('Load Connection From Pool Failed ', err);
+            return next(err);
+        }
         conn.query(sql, function (err, rows, fields) {
             returnConnection(conn);
             Logger.info('Execute SQL: %s Return [ %j ] [ %j ]', sql, rows, fields);
@@ -81,13 +100,12 @@ function query(sql, next) {
  * DisConnect From MySQL, Close All Connections
  */
 function destory() {
-    if (pool) {
+    if (pool && !pool._closed) {
         pool.end(function (err) {
             Logger.warn("Pool Closed ", err);
         });
     }
 }
-
 
 
 /**
