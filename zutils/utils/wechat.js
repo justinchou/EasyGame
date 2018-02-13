@@ -28,6 +28,7 @@ function getAccessToken(code, info, next) {
         } catch (e) {
             next(new Error('parse json failed'));
             Logger.error('parse json failed!', text);
+            return;
         }
         Logger.debug('Load Wechat AccessToken [ %j ]', body);
         next(err, body);
@@ -47,6 +48,7 @@ function getStateInfo(accessToken, openid, next) {
         } catch (e) {
             next(new Error('parse json failed'));
             Logger.error('parse json failed!', text);
+            return;
         }
         Logger.debug('Load Wechat UserInfo [ %j ]', body);
         next(err, body);
