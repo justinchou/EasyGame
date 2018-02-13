@@ -17,7 +17,7 @@ const ConfigMocha = require('../../../config/mocha');
 
 const HttpResponser = require('../../classes/HttpResponser');
 
-describe('HttpResponser', () => {
+describe('ZUtils HttpResponser', () => {
     let decode = {code: 0, message: {message: "success"}, "attachment": [], "stack": {}};
     let encode = JSON.stringify(decode);
 

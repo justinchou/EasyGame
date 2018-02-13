@@ -26,7 +26,7 @@ const ConfigUtils = require('../../config/utils');
 const ConfigMocha = require('../../config/mocha');
 const ErrorCode = require('../config/errorCode');
 
-describe('App', () => {
+describe('ZPlatform App', () => {
 
     let userId = '23432545';
     let password = 'lvgetech';
@@ -248,7 +248,7 @@ describe('App', () => {
         it('获取用户公开信息 #有对应用户', done => {
             let api = '/resources/userPublicInfo?' + QS.stringify({
                 userId: emailUserId,
-                checksum: Crypto.calcSum(emailUserid)
+                checksum: Crypto.calcSum(emailUserId)
             });
             app.get(api).expect(200).end((err, res) => {
                 if (err) {
@@ -270,7 +270,7 @@ describe('App', () => {
         it('获取用户私密信息 #有对应用户', done => {
             let api = '/resources/userPrivateInfo?' + QS.stringify({
                 userId: guestUserId,
-                checksum: Crypto.calcSum(guestUserid)
+                checksum: Crypto.calcSum(guestUserId)
             });
             app.get(api).expect(200).end((err, res) => {
                 if (err) {
@@ -369,7 +369,7 @@ describe('App', () => {
                 userId: emailUserId,
                 type: type,
                 amount: amount,
-                checksum: Crypto.calcSum(emailUserid, type, amount)
+                checksum: Crypto.calcSum(emailUserId, type, amount)
             }).expect(200).end((err, res) => {
                 if (err) {
                     Logger.error('Request API %s Failed, err: ', api, err);
@@ -397,7 +397,7 @@ describe('App', () => {
                 userId: emailUserId,
                 type: type,
                 amount: amount,
-                checksum: Crypto.calcSum(emailUserid, type, amount)
+                checksum: Crypto.calcSum(emailUserId, type, amount)
             }).expect(200).end((err, res) => {
                 if (err) {
                     Logger.error('Request API %s Failed, err: ', api, err);
@@ -426,7 +426,7 @@ describe('App', () => {
                 userId: emailUserId,
                 type: type,
                 amount: amount,
-                checksum: Crypto.calcSum(emailUserid, type, amount)
+                checksum: Crypto.calcSum(emailUserId, type, amount)
             }).expect(200).end((err, res) => {
                 if (err) {
                     Logger.error('Request API %s Failed, err: ', api, err);
@@ -454,7 +454,7 @@ describe('App', () => {
                 userId: emailUserId,
                 type: type,
                 amount: amount,
-                checksum: Crypto.calcSum(emailUserid, type, amount)
+                checksum: Crypto.calcSum(emailUserId, type, amount)
             }).expect(200).end((err, res) => {
                 if (err) {
                     Logger.error('Request API %s Failed, err: ', api, err);
@@ -483,7 +483,7 @@ describe('App', () => {
                 userId: guestUserId,
                 type: type,
                 amount: amount,
-                checksum: Crypto.calcSum(guestUserid, type, amount)
+                checksum: Crypto.calcSum(guestUserId, type, amount)
             }).expect(200).end((err, res) => {
                 if (err) {
                     Logger.error('Request API %s Failed, err: ', api, err);
@@ -511,7 +511,7 @@ describe('App', () => {
                 userId: guestUserId,
                 type: type,
                 amount: amount,
-                checksum: Crypto.calcSum(guestUserid, type, amount)
+                checksum: Crypto.calcSum(guestUserId, type, amount)
             }).expect(200).end((err, res) => {
                 if (err) {
                     Logger.error('Request API %s Failed, err: ', api, err);
@@ -540,7 +540,7 @@ describe('App', () => {
                 userId: emailUserId,
                 type: type,
                 amount: amount,
-                checksum: Crypto.calcSum(emailUserid, type, amount, 123)
+                checksum: Crypto.calcSum(emailUserId, type, amount, 123)
             }).expect(200).end((err, res) => {
                 if (err) {
                     Logger.error('Request API %s Failed, err: ', api, err);
@@ -562,7 +562,7 @@ describe('App', () => {
                 userId: emailUserId,
                 type: type,
                 amount: amount,
-                checksum: Crypto.calcSum(emailUserid, type, amount, 123)
+                checksum: Crypto.calcSum(emailUserId, type, amount, 123)
             }).expect(200).end((err, res) => {
                 if (err) {
                     Logger.error('Request API %s Failed, err: ', api, err);
@@ -584,7 +584,7 @@ describe('App', () => {
                 userId: guestUserId,
                 type: type,
                 amount: amount,
-                checksum: Crypto.calcSum(guestUserid, type, amount)
+                checksum: Crypto.calcSum(guestUserId, type, amount)
             }).expect(200).end((err, res) => {
                 if (err) {
                     Logger.error('Request API %s Failed, err: ', api, err);
@@ -606,7 +606,7 @@ describe('App', () => {
                 userId: guestUserId,
                 type: type,
                 amount: amount,
-                checksum: Crypto.calcSum(guestUserid, type, amount)
+                checksum: Crypto.calcSum(guestUserId, type, amount)
             }).expect(200).end((err, res) => {
                 if (err) {
                     Logger.error('Request API %s Failed, err: ', api, err);
@@ -628,7 +628,7 @@ describe('App', () => {
                 userId: guestUserId,
                 type: type,
                 amount: -amount,
-                checksum: Crypto.calcSum(guestUserid, type, -amount)
+                checksum: Crypto.calcSum(guestUserId, type, -amount)
             }).expect(200).end((err, res) => {
                 if (err) {
                     Logger.error('Request API %s Failed, err: ', api, err);
@@ -650,7 +650,7 @@ describe('App', () => {
                 userId: guestUserId,
                 type: type,
                 amount: -amount,
-                checksum: Crypto.calcSum(guestUserid, type, -amount)
+                checksum: Crypto.calcSum(guestUserId, type, -amount)
             }).expect(200).end((err, res) => {
                 if (err) {
                     Logger.error('Request API %s Failed, err: ', api, err);

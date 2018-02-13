@@ -19,7 +19,7 @@ const ErrorCode = require('../config/errorCode');
 
 let App = require('../app');
 
-describe('App', () => {
+describe('ZWebsite App', () => {
     describe('#App Run 检测APP基础功能', () => {
         let app;
 

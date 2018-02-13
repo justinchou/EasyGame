@@ -21,7 +21,7 @@ const Crypto = require('../../utils/crypto');
 
 let UserModel = require('../../model/user.model');
 
-describe('Model', () => {
+describe('ZUtils Model User', () => {
     describe('#UserModel 检测User数据表处理函数', () => {
 
         before(done => {

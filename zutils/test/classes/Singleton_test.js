@@ -9,22 +9,17 @@
 'use strict';
 
 const Should = require('chai').should();
+const Path = require('path');
 
+require('log4js').configure(Path.join(__dirname, '../../../config/log4js.json'));
+const Logger = require('log4js').getLogger('mocha');
 const ConfigMocha = require('../../../config/mocha');
 
 let Singleton = require('../../classes/Singleton').getInstance();
+let userInfo = require('./Singleton1').userInfo;
+let gameInfo = require('./Singleton2').gameInfo;
 
-let gameInfo = require('./Singleton2_test').gameInfo;
-let userInfo = {
-    name: 'justin',
-    age: 22,
-    gender: 1,
-    img: "http://"
-};
-
-Singleton.set('user', userInfo);
-
-describe('Check Singleton', () => {
+describe('ZUtils Singleton', () => {
 
     beforeEach(function () {
         this.timeout(ConfigMocha.timeout);

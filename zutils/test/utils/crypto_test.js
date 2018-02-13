@@ -16,7 +16,7 @@ const Path = require('path');
 require('log4js').configure(Path.join(__dirname, '../../../config/log4js.json'));
 const Logger = require('log4js').getLogger('mocha');
 
-describe('Calc', () => {
+describe('ZUtils Crypto', () => {
     it('should calc sum', function () {
 
     });

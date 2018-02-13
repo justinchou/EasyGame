@@ -19,7 +19,7 @@ const ConfigMocha = require('../../../config/mocha');
 
 let AccountModel = require('../../model/account.model');
 
-describe('Model', () => {
+describe('ZUtils Model Account', () => {
     describe('#AccountModel 检测Account数据表处理函数', () => {
 
         before(done => {
