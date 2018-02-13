@@ -13,6 +13,10 @@ const Expect = require('chai').expect;
 const Assert = require('chai').assert;
 const _ = require('lodash');
 const Util = require('util');
+const Path = require('path');
+
+require('log4js').configure(Path.join(__dirname, '../../config/log4js.json'));
+const Logger = require('log4js').getLogger('mocha');
 
 describe('Should Test', () => {
 
@@ -76,11 +80,11 @@ describe('Should Test', () => {
     target.message.status.online = false;
 
     before(function () {
-        console.log('连接符号帮助阅读没有实际意义:\nto be been is that which and has have with at of same but does\n');
+        Logger.info('连接符号帮助阅读没有实际意义:\nto be been is that which and has have with at of same but does\n');
     });
 
     describe("Simple Type", () => {
-        console.log('基本语法: xx.should.to/not.[equal eql exist include include.members .have.property have.members]\n');
+        Logger.info('基本语法: xx.should.to/not.[equal eql exist include include.members .have.property have.members]\n');
 
         let a = 12, b = undefined, c = 12;
         let e = [a, b, c], f = {coins: a, gems: c, lv: b};
@@ -98,7 +102,7 @@ describe('Should Test', () => {
         });
 
         it('#eql', function () {
-            console.log('equal 比较两个基本类型, eql 深度比较两个复杂类型 eql === deep.equal\n');
+            Logger.info('equal 比较两个基本类型, eql 深度比较两个复杂类型 eql === deep.equal\n');
             source.message.server.should.to.eql(target.message.server);
         });
 
@@ -208,8 +212,8 @@ describe('Should Test', () => {
             source.message.should.to.have.nested.property('user.id');
         });
         it('#own own.property own.include 不与nested同用', function () {
-            console.log(".property .include 表示自己的属性和继承的属性");
-            console.log(".own.property .own.include 表示自己的属性, 不包含继承的属性");
+            Logger.info(".property .include 表示自己的属性和继承的属性");
+            Logger.info(".own.property .own.include 表示自己的属性, 不包含继承的属性");
             source.message.user.should.have.own.property("id", "125");
         });
         it('#keys include(s) empty have.keys include.keys', function () {

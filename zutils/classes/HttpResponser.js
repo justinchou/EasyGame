@@ -56,3 +56,9 @@ HttpResponser.prototype.decode = function (msg) {
 
     return this;
 };
+
+HttpResponser.prototype.send = function (res) {
+    // todo 当使用其他压缩加密格式时, 就使用encode方法
+    // res.send(this.encode());
+    res.json(this);
+};

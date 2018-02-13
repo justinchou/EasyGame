@@ -10,6 +10,7 @@
 
 const Should = require('chai').should();
 const Path = require('path');
+const Util = require('util');
 
 require('log4js').configure(Path.join(__dirname, '../../../config/log4js.json'));
 
@@ -39,7 +40,7 @@ describe('Model', () => {
         });
 
         let type = "guest";
-        let account = type + "_" + (Math.floor(Math.random() * 10000000000) + 1);
+        let account = Util.format('%s_%s', type, (Math.floor(Math.random() * 10000000000) + 1));
         let password = '123456';
         let newpass = '2345678';
         let userid = '349573';

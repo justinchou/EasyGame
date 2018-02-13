@@ -17,7 +17,7 @@ const ErrorCode = require('../config/errorCode');
 
 // lbs means load balance service, provide for lbs live check
 Router.all('/', function (req, res, next) {
-    res.json(new HttpResponser().fill(ErrorCode.Success, "Success"));
+    new HttpResponser().fill(ErrorCode.Success, "Success").send(res);
 });
 
 module.exports = Router;

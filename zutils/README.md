@@ -18,7 +18,7 @@ __**HttpResponser**__
 向客户端返回数据的类, 数据均采用此格式进行通信.
 
     let data = new HttpResponser().fill(errCode, {"message": "", otherdata: xxx}, [attach], {stack: xxx});
-    res.send(data.encode());
+    data.send(res);
     
 通过`new HttpResponser()`创建类, 然后通过`fill()`填充数据.
 

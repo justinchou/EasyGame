@@ -114,15 +114,15 @@ Router.get('/register', function (req, res) {
     let headimgurl = req.query.headimgurl || '';
     let checksum = req.query.checksum;
     if (checksum !== Crypto.calcSum(account, type, password)) {
-        res.json(new HttpResponser().fill(ErrorCode.APICheckSumFailed, {'message': 'check sum failed'}));
+        new HttpResponser().fill(ErrorCode.APICheckSumFailed, {'message': 'check sum failed'}).send(res);
         return;
     }
 
     createUser(account, type, password, name, sex, headimgurl, (err, userid) => {
         if (err || !userid) {
-            res.json(new HttpResponser().fill(ErrorCode.AccountRegistered, {'message': 'account been used'}));
+            new HttpResponser().fill(ErrorCode.AccountRegistered, {'message': 'account been used'}).send(res);
         } else {
-            res.json(new HttpResponser().fill(ErrorCode.Success, {"userid": userid}));
+            new HttpResponser().fill(ErrorCode.Success, {"userid": userid}).send(res);
         }
     });
 });
@@ -132,14 +132,14 @@ Router.get('/guestAuth', function (req, res) {
     let type = "guest";
 
     if (!account) {
-        res.json(new HttpResponser().fill(ErrorCode.InvalidParams, {"message":"invalid params"}));
+        new HttpResponser().fill(ErrorCode.InvalidParams, {"message":"invalid params"}).send(res);
         Logger.error('Invalid Params: params [ %j ]', req.query);
         return;
     }
 
     AccountModel.accountInfo(account, type, (err, data) => {
         if (err || !data) {
-            res.json(new HttpResponser().fill(ErrorCode.DatabaseNoRecord, {"message":"no account data"}));
+            new HttpResponser().fill(ErrorCode.DatabaseNoRecord, {"message":"no account data"}).send(res);
             Logger.error('No Account Data: params [ %j ] err ', req.query, err);
             return;
         }
@@ -152,7 +152,7 @@ Router.get('/guestAuth', function (req, res) {
             sign: sign
         };
 
-        res.json(new HttpResponser().fill(ErrorCode.Success, {auth: auth}));
+        new HttpResponser().fill(ErrorCode.Success, {auth: auth}).send(res);
 
         LogStat.info('Login Guest [ %j ] [ %j ]', req.query, auth);
     });
@@ -164,14 +164,14 @@ Router.get('/emailAuth', function (req, res) {
     let password = req.query.password;
 
     if (!account || !password) {
-        res.json(new HttpResponser().fill(ErrorCode.InvalidParams, {"message":"invalid params"}));
+        new HttpResponser().fill(ErrorCode.InvalidParams, {"message":"invalid params"}).send(res);
         Logger.error('Invalid Params: params [ %j ]', req.query);
         return;
     }
 
     AccountModel.accountInfo(account, type, password, (err, data) => {
         if (err || !data) {
-            res.json(new HttpResponser().fill(ErrorCode.DatabaseNoRecord, {"message":"no account data"}));
+            new HttpResponser().fill(ErrorCode.DatabaseNoRecord, {"message":"no account data"}).send(res);
             Logger.error('No Account Data: params [ %j ] err ', req.query, err);
             return;
         }
@@ -184,7 +184,7 @@ Router.get('/emailAuth', function (req, res) {
             sign: sign
         };
 
-        res.json(new HttpResponser().fill(ErrorCode.Success, {auth: auth}));
+        new HttpResponser().fill(ErrorCode.Success, {auth: auth}).send(res);
 
         LogStat.info('Login Email [ %j ] [ %j ]', req.query, auth);
     });
@@ -197,20 +197,20 @@ Router.get('/wechatAuth', function (req, res) {
     let info = ConfigUtils.app[os];
 
     if (!code || !os || !info) {
-        res.json(new HttpResponser().fill(ErrorCode.InvalidParams, {"message":"invalid params"}));
+        new HttpResponser().fill(ErrorCode.InvalidParams, {"message":"invalid params"}).send(res);
         Logger.error('Invalid Params: params [ %j ]', req.query);
         return;
     }
 
     WeChatAPI.getAccessToken(code, info, function (err, data) {
         if (err) {
-            res.json(new HttpResponser().fill(ErrorCode.WeChatAPIError, {"message": "load wechat access_token failed"}));
+            new HttpResponser().fill(ErrorCode.WeChatAPIError, {"message": "load wechat access_token failed"}).send(res);
             Logger.error('Load Wechat AccessToken Failed: params [ %j ] err ', req.query, err);
             return;
         }
 
         if (data.errcode) {
-            res.json(new HttpResponser().fill(ErrorCode.WeChatAPIError, {"message": data.errmsg}));
+            new HttpResponser().fill(ErrorCode.WeChatAPIError, {"message": data.errmsg}).send(res);
             Logger.error('Load Wechat AccessToken Failed: params [ %j ] err ', req.query, data.errmsg);
             return;
         }
@@ -219,13 +219,13 @@ Router.get('/wechatAuth', function (req, res) {
         let openid = data.openid;
         WeChatAPI.getStateInfo(accessToken, openid, function (err, data) {
             if (err) {
-                res.json(new HttpResponser().fill(ErrorCode.WeChatAPIError, {"message": "load wechat stateInfo failed"}));
+                new HttpResponser().fill(ErrorCode.WeChatAPIError, {"message": "load wechat stateInfo failed"}).send(res);
                 Logger.error('Load Wechat StateInfo Failed: params [ %j ] err ', req.query, err);
                 return;
             }
 
             if (data.errcode) {
-                res.json(new HttpResponser().fill(ErrorCode.WeChatAPIError, {"message": data.errmsg}));
+                new HttpResponser().fill(ErrorCode.WeChatAPIError, {"message": data.errmsg}).send(res);
                 Logger.error('Load Wechat StateInfo Failed: params [ %j ] err ', req.query, data.errmsg);
                 return;
             }
@@ -236,7 +236,7 @@ Router.get('/wechatAuth', function (req, res) {
             let headimgurl = data.headimgurl;
             createUser(account, type, "", nickname, sex, headimgurl, function (err, userid) {
                 if (err || !userid) {
-                    res.json(new HttpResponser().fill(ErrorCode.WeChatAPIError, {"message": "create wechat user info failed"}));
+                    new HttpResponser().fill(ErrorCode.WeChatAPIError, {"message": "create wechat user info failed"}).send(res);
                     Logger.error('Create Wechat Userinfo Failed: params [ %j ] err ', req.query, err);
                     return;
                 }
@@ -249,7 +249,7 @@ Router.get('/wechatAuth', function (req, res) {
                     sign: sign
                 };
 
-                res.json(new HttpResponser().fill(ErrorCode.Success, {auth: auth}));
+                new HttpResponser().fill(ErrorCode.Success, {auth: auth}).send(res);
 
                 LogStat.info('Login Wechat [ %j ] [ %j ]', req.query, auth);
             });

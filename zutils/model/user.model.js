@@ -40,7 +40,7 @@ function init() {
 function getConnection(next) {
     pool.getConnection(function (err, conn) {
         if (err) {
-            console.error(err);
+            Logger.error('Get Connection Failed', err);
             return next(err);
         }
         next(null, conn);

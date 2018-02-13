@@ -16,7 +16,7 @@ const HttpResponser = require('../../../zutils/classes/HttpResponser');
 const ErrorCode = require('../../config/errorCode');
 
 Router.get('/', function (req, res, next) {
-    res.json(new HttpResponser().fill(ErrorCode.Success, {"message": "success"}));
+    new HttpResponser().fill(ErrorCode.Success, {"message": "success"}).send(res);
 });
 
 module.exports = Router;

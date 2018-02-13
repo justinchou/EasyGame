@@ -35,20 +35,20 @@ Router.get('/clientInfo', function (req, res) {
         appWeb: ConfigUtils.version.clientWeb,
         hallServer: Crypto.calcServerAddr(ConfigHall.host, ConfigHall.port)
     };
-    res.json(new HttpResponser().fill(ErrorCode.Success, {'clientInfo': clientInfo}));
+    new HttpResponser().fill(ErrorCode.Success, {'clientInfo': clientInfo}).send(res);
 });
 
 Router.get('/userPublicInfo', function (req, res) {
     let userid = req.query.userid;
     let checksum = req.query.checksum;
     if (checksum !== Crypto.calcSum(userid)) {
-        res.json(new HttpResponser().fill(ErrorCode.APICheckSumFailed, {'message': 'check sum failed'}));
+        new HttpResponser().fill(ErrorCode.APICheckSumFailed, {'message': 'check sum failed'}).send(res);
         return;
     }
 
     UserModel.userPubInfo(userid, function (err, data) {
         if (err) {
-            res.json(new HttpResponser().fill(ErrorCode.DatabaseNoRecord, {'message': 'db error or no record'}));
+            new HttpResponser().fill(ErrorCode.DatabaseNoRecord, {'message': 'db error or no record'}).send(res);
             return;
         }
 
@@ -58,7 +58,7 @@ Router.get('/userPublicInfo', function (req, res) {
             sex: data.gender,
             headimgurl: data.headimg || ''
         };
-        res.json(new HttpResponser().fill(ErrorCode.Success, {userInfo: userInfo}));
+        new HttpResponser().fill(ErrorCode.Success, {userInfo: userInfo}).send(res);
     });
 });
 
@@ -66,13 +66,13 @@ Router.get('/userPrivateInfo', function (req, res) {
     let userid = req.query.userid;
     let checksum = req.query.checksum;
     if (checksum !== Crypto.calcSum(userid)) {
-        res.json(new HttpResponser().fill(ErrorCode.APICheckSumFailed, {'message': 'check sum failed'}));
+        new HttpResponser().fill(ErrorCode.APICheckSumFailed, {'message': 'check sum failed'}).send(res);
         return;
     }
 
     UserModel.userPriInfo(userid, function (err, data) {
         if (err) {
-            res.json(new HttpResponser().fill(ErrorCode.DatabaseNoRecord, {'message': 'db error or no record'}));
+            new HttpResponser().fill(ErrorCode.DatabaseNoRecord, {'message': 'db error or no record'}).send(res);
             return;
         }
 
@@ -83,7 +83,7 @@ Router.get('/userPrivateInfo', function (req, res) {
             coins: data.coins,
             gems: data.gems
         };
-        res.json(new HttpResponser().fill(ErrorCode.Success, {userInfo: userInfo}));
+        new HttpResponser().fill(ErrorCode.Success, {userInfo: userInfo}).send(res);
     });
 });
 
@@ -93,25 +93,25 @@ Router.post('/addUserRes', function (req, res) {
     let amount = req.body.amount;
     let checksum = req.body.checksum;
     if (checksum !== Crypto.calcSum(userid, type, amount)) {
-        res.json(new HttpResponser().fill(ErrorCode.APICheckSumFailed, {'message': 'check sum failed'}));
+        new HttpResponser().fill(ErrorCode.APICheckSumFailed, {'message': 'check sum failed'}).send(res);
         return;
     }
 
     amount = parseInt(amount, 10);
     if (!userid || !type || !amount || Number.isNaN(amount) || amount < 0) {
-        res.json(new HttpResponser().fill(ErrorCode.InvalidParams, {"message": "invalid params"}));
+        new HttpResponser().fill(ErrorCode.InvalidParams, {"message": "invalid params"}).send(res);
         return;
     }
 
     function cb(err, success) {
         if (err || !success) {
             Logger.error('Add User Res Failed, type [ %s ] params [ %j ] [ %j ]', type, req.body, req.query);
-            res.json(new HttpResponser().fill(ErrorCode.UpdateDBFailed, {"message": "write db failed"}));
+            new HttpResponser().fill(ErrorCode.UpdateDBFailed, {"message": "write db failed"}).send(res);
             return;
         }
         UserModel.userPriInfo(userid, function (err, data) {
             if (err) {
-                res.json(new HttpResponser().fill(ErrorCode.DatabaseNoRecord, {'message': 'db error or no record'}));
+                new HttpResponser().fill(ErrorCode.DatabaseNoRecord, {'message': 'db error or no record'}).send(res);
                 return;
             }
 
@@ -126,7 +126,7 @@ Router.post('/addUserRes', function (req, res) {
             let addInfo = {};
             addInfo[type] = amount;
 
-            res.json(new HttpResponser().fill(ErrorCode.Success, {userInfo: userInfo, addInfo: addInfo}));
+            new HttpResponser().fill(ErrorCode.Success, {userInfo: userInfo, addInfo: addInfo}).send(res);
         });
     }
 
@@ -145,7 +145,7 @@ Router.post('/addUserRes', function (req, res) {
             break;
         default:
             Logger.error('Add User Res Failed, type [ %s ] params [ %j ] [ %j ]', type, req.body, req.query);
-            res.json(new HttpResponser().fill(ErrorCode.InvalidParams, {"message": "invalid type"}));
+            new HttpResponser().fill(ErrorCode.InvalidParams, {"message": "invalid type"}).send(res);
             break;
     }
 });
@@ -156,25 +156,25 @@ Router.post('/costUserRes', function (req, res) {
     let amount = req.body.amount;
     let checksum = req.body.checksum;
     if (checksum !== Crypto.calcSum(userid, type, amount)) {
-        res.json(new HttpResponser().fill(ErrorCode.APICheckSumFailed, {'message': 'check sum failed'}));
+        new HttpResponser().fill(ErrorCode.APICheckSumFailed, {'message': 'check sum failed'}).send(res);
         return;
     }
 
     amount = parseInt(amount, 10);
     if (!userid || !type || !amount || Number.isNaN(amount) || amount < 0) {
-        res.json(new HttpResponser().fill(ErrorCode.InvalidParams, {"message": "invalid params"}));
+        new HttpResponser().fill(ErrorCode.InvalidParams, {"message": "invalid params"}).send(res);
         return;
     }
 
     function cb(err, success) {
         if (err || !success) {
             Logger.error('Cost User Res Failed, type [ %s ] params [ %j ] [ %j ]', type, req.body, req.query);
-            res.json(new HttpResponser().fill(ErrorCode.UpdateDBFailed, {"message": "write db failed"}));
+            new HttpResponser().fill(ErrorCode.UpdateDBFailed, {"message": "write db failed"}).send(res);
             return;
         }
         UserModel.userPriInfo(userid, function (err, data) {
             if (err) {
-                res.json(new HttpResponser().fill(ErrorCode.DatabaseNoRecord, {'message': 'db error or no record'}));
+                new HttpResponser().fill(ErrorCode.DatabaseNoRecord, {'message': 'db error or no record'}).send(res);
                 return;
             }
 
@@ -189,7 +189,7 @@ Router.post('/costUserRes', function (req, res) {
             let costInfo = {};
             costInfo[type] = amount;
 
-            res.json(new HttpResponser().fill(ErrorCode.Success, {userInfo: userInfo, costInfo: costInfo}));
+            new HttpResponser().fill(ErrorCode.Success, {userInfo: userInfo, costInfo: costInfo}).send(res);
         });
     }
 
@@ -202,7 +202,7 @@ Router.post('/costUserRes', function (req, res) {
             break;
         default:
             Logger.error('Add User Res Failed, type [ %s ] params [ %j ] [ %j ]', type, req.body, req.query);
-            res.json(new HttpResponser().fill(ErrorCode.InvalidParams, {"message": "invalid type"}));
+            new HttpResponser().fill(ErrorCode.InvalidParams, {"message": "invalid type"}).send(res);
             break;
     }
 });

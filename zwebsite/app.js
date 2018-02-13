@@ -50,7 +50,7 @@ app.use(function (err, req, res, next) {
         stack: req.app.get('env') === 'development' ? err : {}
     };
     res.status(err.status || 500);
-    res.json(new HttpResponser().fill(msg));
+    new HttpResponser().fill(msg).send(res);
 });
 
 if (!ConfigMocha.debug) {

@@ -10,9 +10,12 @@
 
 const Should = require('chai').should();
 const Request = require('supertest');
+const Path = require('path');
 
+require('log4js').configure(Path.join(__dirname, '../../config/log4js.json'));
 const Logger = require('log4js').getLogger('mocha');
 const ConfigMocha = require('../../config/mocha');
+const ErrorCode = require('../config/errorCode');
 
 let App = require('../app');
 
@@ -36,6 +39,11 @@ describe('App', () => {
                     Logger.info('%s: res.header [ %j ], res.headers [ %j ]', api, res.header, res.headers);
                     Logger.info('%s: res.status [ %s ], res.statusCode [ %s ]', api, res.status, res.statusCode);
                 }
+
+                Should.equal(err, null);
+                res.statusCode.should.be.equal(200);
+                res.body.code.should.be.equal(ErrorCode.Success);
+
                 done();
             });
         });
@@ -51,6 +59,11 @@ describe('App', () => {
                     Logger.info('%s: res.header [ %j ], res.headers [ %j ]', api, res.header, res.headers);
                     Logger.info('%s: res.status [ %s ], res.statusCode [ %s ]', api, res.status, res.statusCode);
                 }
+
+                Should.equal(err, null);
+                res.statusCode.should.be.equal(200);
+                res.body.code.should.be.equal(ErrorCode.Success);
+
                 done();
             });
         });
