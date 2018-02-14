@@ -81,9 +81,10 @@ function returnConnection(conn) {
  */
 function query(sql, next) {
     getConnection((err, conn) => {
-        if (err) {
-            Logger.error('Load Connection From Pool Failed ', err);
-            return next(err);
+        if (err || !conn) {
+            next(err || new Error('Connection Invalid'));
+            Logger.error('Get Connection From Pool Failed ', err || new Error('Connection Invalid'));
+            return;
         }
         conn.query(sql, function (err, rows, fields) {
             returnConnection(conn);
@@ -110,7 +111,7 @@ function destory() {
 
 /**
  * Check If User Exist
- * @param {String} userId
+ * @param {Number} userId
  * @param {Function} next (ERROR, Boolean)
  */
 function existUser(userId, next) {
@@ -135,7 +136,7 @@ function existUser(userId, next) {
 
 /**
  * Load User Info
- * @param {String} userId
+ * @param {Number} userId
  * @param {Function} next (ERROR, UserInfo)
  */
 function userInfo(userId, next) {
@@ -165,7 +166,7 @@ function userInfo(userId, next) {
 
 /**
  * User Base Info - Public Info
- * @param {String} userId
+ * @param {Number} userId
  * @param {Function} next (ERROR, BaseUserInfo)
  */
 function userPubInfo(userId, next) {
@@ -185,7 +186,7 @@ function userPubInfo(userId, next) {
 
 /**
  * Get Gem
- * @param {String} userId
+ * @param {Number} userId
  * @param {Function} next (ERROR, BaseUserInfo)
  */
 function userPriInfo(userId, next) {
@@ -235,7 +236,7 @@ function createUser(nickname, gender, headimg, next) {
 
 /**
  * Update User Info
- * @param {String} userId
+ * @param {Number} userId
  * @param {String} nickname
  * @param {Number} gender  0: male, 1: female, 2: other
  * @param {String|Function} headimg
@@ -281,7 +282,7 @@ function updateUser(userId, nickname, gender, headimg, next) {
 
 /**
  * Add Gem
- * @param {String} userId
+ * @param {Number} userId
  * @param {Number} gems  must be positive
  * @param {Function} next (ERROR, Boolean)
  */
@@ -309,7 +310,7 @@ function addGems(userId, gems, next) {
 
 /**
  * Minus Gem
- * @param {String} userId
+ * @param {Number} userId
  * @param {Number} gems  must be positive
  * @param {Function} next (ERROR, Boolean)
  */
@@ -329,7 +330,7 @@ function costGems(userId, gems, next) {
 
 /**
  * Add Coins
- * @param {String} userId
+ * @param {Number} userId
  * @param {Number} coins  must be positive
  * @param {Function} next (ERROR, Boolean)
  */
@@ -357,7 +358,7 @@ function addCoins(userId, coins, next) {
 
 /**
  * Minus Gems
- * @param {String} userId
+ * @param {Number} userId
  * @param {Number} coins  must be positive
  * @param {Function} next (ERROR, Boolean)
  */
@@ -377,7 +378,7 @@ function costCoins(userId, coins, next) {
 
 /**
  * Add Lv
- * @param {String} userId
+ * @param {Number} userId
  * @param {Number} lv  must be positive
  * @param {Function} next (ERROR, Boolean)
  */
@@ -405,7 +406,7 @@ function addLv(userId, lv, next) {
 
 /**
  * Add Exp
- * @param {String} userId
+ * @param {Number} userId
  * @param {Number} exp  must be positive
  * @param {Function} next (ERROR, Boolean)
  */

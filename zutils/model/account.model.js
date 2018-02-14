@@ -80,9 +80,10 @@ function returnConnection(conn) {
  */
 function query(sql, next) {
     getConnection((err, conn) => {
-        if (err) {
-            Logger.error('Load Connection From Pool Failed ', err);
-            return next(err);
+        if (err || !conn) {
+            next(err || new Error('Connection Invalid'));
+            Logger.error('Get Connection From Pool Failed ', err || new Error('Connection Invalid'));
+            return;
         }
         conn.query(sql, function (err, rows, fields) {
             returnConnection(conn);
@@ -255,7 +256,7 @@ function updatePassword(account, type, password, next) {
  * Link UserId Onto Account
  * @param {String} account
  * @param {String} type
- * @param {String} userId
+ * @param {Number} userId
  * @param {Boolean|Function} force true:当用户已绑定账号仍然强制绑定, false:仅当用户从未绑定账号时绑定
  * @param {Function=} next (ERROR, Boolean)
  */
