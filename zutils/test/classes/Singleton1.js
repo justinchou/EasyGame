@@ -9,6 +9,9 @@
 'use strict';
 
 let Singleton = require('../../classes/Singleton').getInstance();
+Singleton.startListen('user', function (value) {
+    console.log('user changed to [ %j ]', value);
+});
 
 let userInfo = {
     name: 'justin',

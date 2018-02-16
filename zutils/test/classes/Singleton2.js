@@ -9,6 +9,9 @@
 'use strict';
 
 let Singleton = require('../../classes/Singleton').getInstance();
+Singleton.startListen('games', function (value) {
+    console.log('games changed to [ %j ]', value);
+});
 
 let gameInfo = [
     {"name": "demo", "host": "127.0.0.1", "port": 3001},
