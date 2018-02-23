@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('Install Deps') {
       steps {
-        sh 'yarn install'
+        sh 'yarn install --offline'
       }
     }
     stage('Copy website Files') {
