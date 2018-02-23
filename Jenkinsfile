@@ -7,6 +7,9 @@ pipeline {
       }
     }
     stage('Copy website Files') {
+      environment {
+        name = 'website'
+      }
       parallel {
         stage('Copy website Files') {
           steps {
@@ -25,6 +28,16 @@ cp bin/platform platform/bin/
 cp -r zutils platform/
 cp -r zplatform platform/
 cp gulpfile.js package.json README.md yarn.lock platform/
+'''
+          }
+        }
+        stage('Copy hall Files') {
+          steps {
+            sh '''mkdir -p hall/bin/
+cp bin/hall hall/bin/
+cp -r zutils hall/
+cp -r zhall hall/
+cp gulpfile.js package.json README.md yarn.lock hall/
 '''
           }
         }
