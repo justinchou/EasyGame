@@ -1,0 +1,8 @@
+{
+  "NoAPI": 1001,
+  "Success": 0,
+  "DuplicateGameServerId": 1,
+  "CheckServerFailed": 2,
+  "GameServerNotAlive": 3,
+  "NoServerOnline": 4
+}
