@@ -10,11 +10,11 @@
 
 const Should = require('chai').should();
 
-const Player = require('../classes/Player');
-const Room = require('../classes/Room');
+const Player = require('../../classes/Player');
+const Room = require('../../classes/Room');
 
 
-describe('ZGame QingwaWangzi', () => {
+describe('ZUtils Game', () => {
 
     let id = 13452;
     let info = {
