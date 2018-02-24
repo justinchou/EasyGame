@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "gulp",
-    "start": "node ./bin/www"
+    "jenkins": "gulp jenkins",
+    "github": "gulp github"
   },
-  "repository": "git@gitee.com:",
-  "private": true,
+  "repository": "git@gitee.com:justinchou/EasyGame.git",
   "keywords": [
     "EasyGame",
     "simple",
