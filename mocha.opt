@@ -1,0 +1,23 @@
+--ui bdd
+--timeout 5000
+--use_strict
+--recursive
+
+## for jenkins
+--no-deprecation
+--reporter xunit
+
+## for github
+--no-deprecation
+--reporter markdown
+
+## for debug
+--trace-deprecation
+--reporter doc
+--colors
+--check-leaks
+--expose-gc
+--log-timer-events
+--perf-basic-prof
+--prof
+
